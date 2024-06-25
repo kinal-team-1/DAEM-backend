@@ -1,0 +1,50 @@
+{
+  "name": "backend-example",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "server",
+  "scripts": {
+    "test": "cross-env NODE_ENV=test node --experimental-vm-modules ./node_modules/jest/bin/jest.js --passWithNoTests --detectOpenHandles --forceExit --coverage",
+    "lint": "eslint .",
+    "ts": "npx tsc --noEmit --skipLibCheck",
+    "dev": "run-p devenv typesafe-i18n",
+    "devenv": "node --watch server.js | pino-pretty",
+    "start": "npm run once-typesafe-i18n && node server.js",
+    "typesafe-i18n": "typesafe-i18n",
+    "once-typesafe-i18n": "typesafe-i18n --no-watch",
+    "prepare": "husky"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@joao-cst/eslint-plugin": "file:./eslint-custom-rules",
+    "@types/supertest": "^6.0.2",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-config-xo": "^0.45.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-prettier": "^5.1.3",
+    "eslint-plugin-unicorn": "^53.0.0",
+    "husky": "^9.0.11",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^3.2.5",
+    "supertest": "7.0.0",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-validator": "^7.1.0",
+    "http-status-codes": "^2.3.0",
+    "intl": "^1.2.5",
+    "mongoose": "^8.4.0",
+    "morgan": "^1.10.0",
+    "pino": "^9.1.0",
+    "pino-pretty": "^11.1.0",
+    "typesafe-i18n": "^5.26.2"
+  }
+}
