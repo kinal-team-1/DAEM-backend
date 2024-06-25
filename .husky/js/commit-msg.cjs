@@ -18,7 +18,7 @@ const commitMessage = fs.readFileSync(commitMsgFile, 'utf8').trim();
 console.log(chalk.magenta('Checking commit message format'));
 
 // Validate the commit message
-if (!validateCommitMessage(commitMessage)) {
+if (!validateCommitMessage(commitMessage) && !commitMessage.startsWith('Merge branch')) {
     console.error(chalk.red('Error: Commit message does not follow the Smart Commit standard.'));
     process.exit(1);
 }
