@@ -25,7 +25,7 @@ jobs:
         env:
           MONGO_INITDB_ROOT_USERNAME: root
           MONGO_INITDB_ROOT_PASSWORD: root
-          MONGO_INITDB_DATABASE: bank-app-test
+          MONGO_INITDB_DATABASE: daem-test
         ports:
           - 27017:27017
         options: >-
@@ -55,8 +55,8 @@ jobs:
       - name: Create MongoDB User
         run: |
           mongosh --host localhost:27017 -u root -p root --authenticationDatabase admin --quiet <<EOF
-            use bank-app-test
-            db.createUser({ user: 'app-user', pwd: 'app-password', roles: [{ role: 'readWrite', db: 'bank-app-test' }] })
+            use daem-test
+            db.createUser({ user: 'app-user', pwd: 'app-password', roles: [{ role: 'readWrite', db: 'daem-test' }] })
           EOF
 
       - name: Install dependencies
@@ -67,11 +67,11 @@ jobs:
             rm .env.*
             touch .env.test
             echo "PORT=4000" >> .env.test
-            echo "MONGO_URL='mongodb://app-user:app-password@localhost:27017/bank-app-test'" >> .env.test
+            echo "MONGO_URL='mongodb://app-user:app-password@localhost:27017/daem-test'" >> .env.test
             echo "JWT_SECRET='6bef1104a2bab0b3a9e9d27875e033da86547968fc3b6ebdbe3f068a2a466e9b'" >> .env.test
 
       - name: Generate types
-        run: npm run once-typesafe-i18n
+        run: npm run typesafe-i18n:once
 
       - name: Check eslint
         run: npm run lint
@@ -81,8 +81,3 @@ jobs:
 
       - name: Run tests
         run: npm run test
-
-      # - name: Run tests
-      #   uses: ArtiomTr/jest-coverage-report-action@v2
-      #   with:
-      #     test-script: npm run test

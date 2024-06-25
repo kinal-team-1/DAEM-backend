@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "esModuleInterop": true,
+        "allowJs": true,
+        "checkJs": true,
+        "module": "NodeNext",
+        // dont know why but this fixes some errors
+        "outDir": "./dist",
+        "moduleResolution": "nodenext"
+    },
+    "exclude": ["./i18n/**/*", "coverage", "eslint-custom-rules", "node_modules"],
+    "include": ["./src/**/*", "./routes.js", "./test/**/*"],
+}
