@@ -22,7 +22,7 @@ ApiClient.setup(async () => {
 
 processCLIArgs(process.argv.splice(2));
 configure({
-  files: ["tests/**/*.spec.js"],
+  files: ["tests/**/*.spec.{js,ts}"],
   plugins: [expect(), apiClient(`http://localhost:${process.env.PORT}`)],
   configureSuite(suite) {
     suite.setup(async () => {
