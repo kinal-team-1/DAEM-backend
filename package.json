@@ -5,7 +5,7 @@
   "type": "module",
   "main": "server",
   "scripts": {
-    "test": "cross-env NODE_ENV=test vitest",
+    "test": "cross-env NODE_ENV=test node bin/test.js",
     "lint": "eslint .",
     "ts": "npx tsc --noEmit --skipLibCheck",
     "dev": "run-p devenv typesafe-i18n",
@@ -19,6 +19,9 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@japa/api-client": "^2.0.0-1",
+    "@japa/expect": "^3.0.0-1",
+    "@japa/runner": "^3.0.0-9",
     "@joao-cst/eslint-plugin": "file:./eslint-custom-rules",
     "@types/supertest": "^6.0.2",
     "cross-env": "^7.0.3",
@@ -32,8 +35,7 @@
     "npm-run-all": "^4.1.5",
     "prettier": "^3.2.5",
     "supertest": "7.0.0",
-    "typescript": "^5.4.5",
-    "vitest": "^1.6.0"
+    "typescript": "^5.4.5"
   },
   "dependencies": {
     "cors": "^2.8.5",

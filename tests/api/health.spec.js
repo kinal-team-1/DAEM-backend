@@ -1,5 +1,10 @@
-import { describe, it } from "vitest";
+import { test } from "@japa/runner";
 
-describe("health check", () => {
-  it("should return 200 status code", async () => {});
+test.group("Health check", () => {
+  test("should return status code 200", async ({ expect, client }) => {
+    const response = await client.get("/");
+    console.log(response);
+
+    expect(response.status()).toBe(200);
+  });
 });
