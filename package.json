@@ -5,14 +5,14 @@
   "type": "module",
   "main": "server",
   "scripts": {
-    "test": "cross-env NODE_ENV=test node --experimental-vm-modules ./node_modules/jest/bin/jest.js --passWithNoTests --detectOpenHandles --forceExit --coverage",
+    "test": "cross-env NODE_ENV=test vitest",
     "lint": "eslint .",
     "ts": "npx tsc --noEmit --skipLibCheck",
     "dev": "run-p devenv typesafe-i18n",
-    "devenv": "node --watch server.js | pino-pretty",
-    "start": "npm run once-typesafe-i18n && node server.js",
+    "dev:server": "node --watch server.js | pino-pretty",
+    "start": "npm run typesafe-i18n:once && node server.js",
     "typesafe-i18n": "typesafe-i18n",
-    "once-typesafe-i18n": "typesafe-i18n --no-watch",
+    "typesafe-i18n:once": "typesafe-i18n --no-watch",
     "prepare": "husky"
   },
   "keywords": [],
@@ -32,7 +32,8 @@
     "npm-run-all": "^4.1.5",
     "prettier": "^3.2.5",
     "supertest": "7.0.0",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "vitest": "^1.6.0"
   },
   "dependencies": {
     "cors": "^2.8.5",

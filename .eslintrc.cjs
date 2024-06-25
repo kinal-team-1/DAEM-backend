@@ -20,12 +20,6 @@ module.exports = {
         sourceType: "script",
       },
     },
-    {
-      files: ["**/*.spec.js", "**/*.spec.jsx", "jest-before-each-test.js"],
-      env: {
-        jest: true,
-      },
-    },
   ],
   parserOptions: {
     ecmaVersion: "latest",
