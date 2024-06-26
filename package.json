@@ -8,7 +8,7 @@
     "test": "node bin/test.js",
     "lint": "eslint .",
     "ts": "npx tsc --noEmit --skipLibCheck",
-    "dev": "run-p devenv typesafe-i18n",
+    "dev": "run-p dev:server typesafe-i18n",
     "dev:server": "node --watch server.js | pino-pretty",
     "start": "npm run typesafe-i18n:once && node server.js",
     "typesafe-i18n": "typesafe-i18n",
