@@ -6,41 +6,23 @@ import { Location } from "../location/location.model.js";
 import mongoose from "mongoose";
 import { cleanObject } from "../../utils/clean-object.js";
 import { StatusCodes } from "http-status-codes";
+import {
+  findPublicCases,
+  findPublicCasesByCoordinates,
+} from "./public-case.utils.js";
 
 export const getFeedPublicCases = async (req, res) => {
   const LL = getTranslationFunctions(req.locale);
   try {
     logger.info("Getting feed public cases");
-    const { lat, long, radius, page, limit } = req.query;
+    const { lat, long, radius, page = 1, limit = 0 } = req.query;
+    const hasCoordinates = Number.isFinite(lat) && Number.isFinite(long);
 
     const [total, feedPublicCases] = await Promise.all([
-      PublicCase.countDocuments(),
-      PublicCase.aggregate([
-        {
-          $lookup: {
-            from: "locations", // db collection name
-            localField: "location",
-            foreignField: "_id",
-            as: "location",
-          },
-        },
-        { $unwind: "$location" },
-        {
-          $geoNear: {
-            near: {
-              type: "Point",
-              coordinates: [Number.parseFloat(long), Number.parseFloat(lat)],
-            },
-            key: "location_point",
-            distanceField: "dist.calculated",
-            maxDistance: Number.parseInt(radius, 10) * 1000,
-            includeLocs: "dist.location_point",
-            spherical: true,
-          },
-        },
-        { $skip: (page - 1) * limit },
-        { $limit: limit },
-      ]),
+      PublicCase.countDocuments({ tp_status: true }),
+      hasCoordinates
+        ? findPublicCasesByCoordinates([long, lat], radius, page, limit)
+        : findPublicCases(page, limit),
     ]);
 
     res.status(StatusCodes.OK).json({
@@ -54,8 +36,7 @@ export const getFeedPublicCases = async (req, res) => {
     logger.info("Successfully got feed public cases");
   } catch (error) {
     logger.error(
-      "Failed to get feed public cases. error of type: ",
-      error.name,
+      "Failed to get feed public cases. error of type: " + error.name,
     );
 
     handleResponse(res, error, LL);
@@ -113,7 +94,7 @@ export const createPublicCase = async (req, res) => {
     logger.info("Successfully created public case");
   } catch (error) {
     await session.abortTransaction();
-    logger.error("Failed to create public case. error of type: ", error.name);
+    logger.error("Failed to create public case. error of type: " + error.name);
 
     handleResponse(res, error, LL);
   } finally {
@@ -139,7 +120,7 @@ export const deletePublicCase = async (req, res) => {
 
     logger.info("Successfully deleted public case");
   } catch (error) {
-    logger.error("Failed to delete public case. error of type: ", error.name);
+    logger.error("Failed to delete public case. error of type: " + error.name);
 
     handleResponse(res, error, LL);
   }

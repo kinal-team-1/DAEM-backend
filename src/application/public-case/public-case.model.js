@@ -31,7 +31,8 @@ const PublicCaseSchema = new Schema({
   },
   attachments: [
     {
-      type: "Attachment",
+      type: Schema.Types.ObjectId,
+      ref: "Attachment",
       required: true,
       default: [],
     },

@@ -20,6 +20,10 @@ const en = {
       LONGITUDE_REQUIRED:
         "Longitude is required and must be a float between -180 and 180",
     },
+    ERROR: {
+      INCOMPLETE_COORDINATES:
+        "If one either latitude or longitude is provided, both must be provided",
+    },
   },
   PUBLIC_CASE: {
     CONTROLLER: {
