@@ -7,6 +7,7 @@ import dbConnection from "./src/db/db-connection.js";
 import { printLanguage } from "./src/middleware/print-language.js";
 import { retrieveLocale } from "./src/middleware/retrieve-locale.js";
 import { logger } from "./src/utils/logger.js";
+import publicCasesRouter from "./src/application/public-case/public-case.routes.js";
 
 if (process.env.NODE_ENV !== "production" && process.env.NODE_ENV !== "test") {
   config({
@@ -22,6 +23,12 @@ if (process.env.NODE_ENV === "test") {
   // here, since later on it will be impossible to change the connection
   await dbConnection();
 }
+
+console.log("NODE_ENV", {
+  NODE_ENV: process.env.NODE_ENV,
+  PORT: process.env.PORT,
+  MONGO_URL: process.env.MONGO_URL,
+});
 
 export const app = express();
 
@@ -45,6 +52,8 @@ app.get("/", (req, res) => {
   const LL = getTranslationFunctions(req.locale);
   res.status(StatusCodes.OK).json({ message: LL.HI(), data: undefined });
 });
+
+app.use("/api/public-case", publicCasesRouter);
 
 app.use(printLanguage);
 

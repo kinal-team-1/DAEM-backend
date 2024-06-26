@@ -47,6 +47,7 @@ const en = {
         "If provided, page query must be an integer greater than 0",
       OPTIONAL_LIMIT_QUERY:
         "If provided, limit query must be an integer greater than 0",
+      ENDPOINT_NOT_FOUND: "Endpoint not found",
     },
   },
 };

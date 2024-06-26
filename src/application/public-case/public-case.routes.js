@@ -75,3 +75,5 @@ router.delete(
   ],
   deletePublicCase,
 );
+
+export default router;
