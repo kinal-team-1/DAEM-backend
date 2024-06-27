@@ -24,7 +24,7 @@ router
       ...pagination,
       query(
         "lat",
-        message((LL) => LL.LOCATION.ROUTES.OPTIONAL_LATITUDE()),
+        message((LL) => LL.LOCATION.ROUTE.OPTIONAL_LATITUDE()),
       )
         .optional()
         .isFloat({ min: -90, max: 90 })
@@ -32,14 +32,14 @@ router
 
       query(
         "long",
-        message((LL) => LL.LOCATION.ROUTES.OPTIONAL_LONGITUDE()),
+        message((LL) => LL.LOCATION.ROUTE.OPTIONAL_LONGITUDE()),
       )
         .optional()
         .isFloat({ min: -180, max: 180 })
         .toFloat(),
       query(
         "radius",
-        message((LL) => LL.LOCATION.ROUTES.OPTIONAL_RADIUS()),
+        message((LL) => LL.LOCATION.ROUTE.OPTIONAL_RADIUS()),
       )
         .optional()
         .isInt({ min: 1 })
@@ -71,7 +71,7 @@ router.delete(
   [
     param(
       "id",
-      message((LL) => LL.PUBLIC_CASE.ROUTES.PUBLIC_CASE_ID_REQUIRED()),
+      message((LL) => LL.PUBLIC_CASE.ROUTE.PUBLIC_CASE_ID_REQUIRED()),
     ).isMongoId(),
     validateChecks,
     custom(async (req, LL) => {

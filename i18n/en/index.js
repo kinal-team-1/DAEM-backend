@@ -7,8 +7,18 @@
 /** @satisfies { BaseTranslation } */
 const en = {
   HI: "Hello World!",
+  GENERAL: {
+    ROUTE: {
+      OPTIONAL_PAGE_QUERY:
+        "If provided, page query must be an integer greater than 0",
+      OPTIONAL_LIMIT_QUERY:
+        "If provided, limit query must be an integer greater than 0",
+      ENDPOINT_NOT_FOUND: "Endpoint not found",
+      INVALID_REQUEST: "Invalid request",
+    },
+  },
   LOCATION: {
-    ROUTES: {
+    ROUTE: {
       OPTIONAL_LATITUDE:
         "If provided, latitude must be a float between -90 and 90",
       OPTIONAL_LONGITUDE:
@@ -37,7 +47,7 @@ const en = {
       CREATED: "Successfully created public case",
       DELETED: "Successfully deleted public case",
     },
-    ROUTES: {
+    ROUTE: {
       TITLE_REQUIRED:
         "Title is required and must be a string between 5 and 100 characters",
       DESCRIPTION_REQUIRED:
@@ -51,14 +61,41 @@ const en = {
       NOT_FOUND: "Public case not found",
     },
   },
-  GENERAL: {
-    ROUTES: {
-      OPTIONAL_PAGE_QUERY:
-        "If provided, page query must be an integer greater than 0",
-      OPTIONAL_LIMIT_QUERY:
-        "If provided, limit query must be an integer greater than 0",
-      ENDPOINT_NOT_FOUND: "Endpoint not found",
-      INVALID_REQUEST: "Invalid request",
+  USER: {
+    CONTROLLER: {
+      GET_ALL_USERS_SUCCESS: "All users retrieved successfully",
+      GET_USER_SUCCESS: "User retrieved successfully",
+      DELETE_USER_SUCCESS: "User deleted successfully",
+    },
+    ROUTE: {
+      USER_ID_REQUIRED:
+        "The URL must include a valid MongoDB ObjectId representing the user id.",
+    },
+    ERROR: {
+      NOT_FOUND: "User not found",
+    },
+  },
+  AUTH: {
+    CONTROLLER: {
+      LOGIN_SUCCESS: "User logged in successfully",
+      LOGOUT_SUCCESS: "User logged out successfully",
+      REGISTER_SUCCESS: "User registered successfully",
+      DELETE_USER_SUCCESS: "User deleted successfully",
+    },
+    ROUTE: {
+      USERNAME_REQUIRED:
+        "Username is required and must be a string between 3 and 20 characters",
+      EMAIL_REQUIRED: "Email is required and must be a valid email address",
+      PASSWORD_REQUIRED:
+        "Password is required and must be a string with a minimum length of 8 characters",
+      USER_ID_REQUIRED:
+        "The URL must include a valid MongoDB ObjectId representing the user id.",
+      EITHER_USERNAME_OR_EMAIL_REQUIRED:
+        "Either username or email is required, the email must be a valid email address, and the username must be a string at least 3 characters long",
+    },
+    ERROR: {
+      NOT_FOUND: "User not found",
+      INVALID_CREDENTIALS: "Invalid credentials",
     },
   },
 };

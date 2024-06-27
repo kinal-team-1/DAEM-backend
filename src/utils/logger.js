@@ -2,6 +2,8 @@ import { pino } from "pino";
 // import prettyPrint from "pino-pretty";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
+const isTest = process.env.NODE_ENV === "test";
+const isDebug = process.env.DEBUG === "true";
 
 const transport = {
   target: "pino-pretty",
@@ -19,6 +21,9 @@ export const logger = pino({
   },
   // color my custom level
   // useOnlyCustomLevels: true,
+
+  // if isTest then only show errors
+  ...(isTest && !isDebug ? { level: "fatal" } : undefined),
 
   // ...(false ? transport : undefined),
   transport: isDevelopment ? transport : undefined,
