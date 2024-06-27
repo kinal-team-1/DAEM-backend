@@ -7,12 +7,13 @@ import {
   getFeedPublicCases,
 } from "./public-case.controllers.js";
 import { pagination } from "../../middleware/pagination.js";
-import { bodyHasCoordinates } from "../../middleware/coordinates-validation.js";
+import { locationValidation } from "../../middleware/coordinates-validation.js";
 import { publicCaseValidation } from "../../middleware/public-case-validation.js";
 import { validateChecks } from "../../middleware/validate-checks.js";
 import { custom } from "../../middleware/custom.js";
 import { PublicCase } from "./public-case.model.js";
 import { PublicCaseNotFoundError } from "./public-case.errors.js";
+import { LocationIncompleteCoordinatesError } from "../location/location-error.error.js";
 
 const router = Router();
 
@@ -44,11 +45,24 @@ router
         .isInt({ min: 1 })
         .toInt(10),
       validateChecks,
+
+      custom(async (req, LL) => {
+        const { lat, long } = req.query;
+
+        const oneIsDefined = Number.isFinite(lat) || Number.isFinite(long);
+        const oneIsMissing = !Number.isFinite(lat) || !Number.isFinite(long);
+
+        if (oneIsDefined && oneIsMissing) {
+          throw new LocationIncompleteCoordinatesError(
+            LL.LOCATION.ERROR.INCOMPLETE_COORDINATES(),
+          );
+        }
+      }),
     ],
     getFeedPublicCases,
   )
   .post(
-    [...publicCaseValidation, ...bodyHasCoordinates, validateChecks],
+    [...publicCaseValidation, ...locationValidation, validateChecks],
     createPublicCase,
   );
 

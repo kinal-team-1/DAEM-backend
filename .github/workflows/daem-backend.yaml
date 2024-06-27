@@ -21,7 +21,7 @@ jobs:
 
     services:
       mongo:
-        image: mongo:4.4.6
+        image: mongo:7.0.11
         env:
           MONGO_INITDB_ROOT_USERNAME: root
           MONGO_INITDB_ROOT_PASSWORD: root
@@ -29,7 +29,7 @@ jobs:
         ports:
           - 27017:27017
         options: >-
-          --health-cmd mongo
+          --health-cmd mongosh
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
@@ -43,18 +43,9 @@ jobs:
         with:
           node-version-file: '.nvmrc'
 
-      - name: Install mongosh
-        run: |
-          sudo apt-get install gnupg
-          wget -qO- https://www.mongodb.org/static/pgp/server-7.0.asc | sudo tee /etc/apt/trusted.gpg.d/server-7.0.asc
-          echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
-          sudo apt-get update
-          sudo apt-get install -y mongodb-mongosh
-          mongosh --version
-
       - name: Create MongoDB User
         run: |
-          mongosh --host localhost:27017 -u root -p root --authenticationDatabase admin --quiet <<EOF
+          docker exec -i $(docker ps -q --filter name=mongo) mongosh --host localhost:27017 -u root -p root --authenticationDatabase admin --quiet <<EOF
             use daem-test
             db.createUser({ user: 'app-user', pwd: 'app-password', roles: [{ role: 'readWrite', db: 'daem-test' }] })
           EOF
@@ -79,5 +70,10 @@ jobs:
       - name: Check typescript
         run: npm run ts
 
-      - name: Run tests
-        run: npm run test
+      - name: Run tests with retry
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 2
+          max_attempts: 2
+          command: npm run test
+

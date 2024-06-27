@@ -16,7 +16,7 @@ export const custom = (fn) => {
       await fn(req, LL);
       next();
     } catch (error) {
-      logger.error("Custom middleware error of type: ", error.name);
+      logger.error("Custom middleware error of type: " + error.name);
       logger.error(error.stack);
 
       res

@@ -16,7 +16,9 @@ ApiClient.setup(async () => {
   );
 
   return () => {
-    connection.close();
+    setTimeout(() => {
+      connection.close();
+    }, 500);
   };
 });
 

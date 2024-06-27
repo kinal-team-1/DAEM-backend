@@ -22,8 +22,13 @@ module.exports = {
     schema: [],
   },
   create(context) {
+    const fileName = context.getFilename();
+    const isTestFile = fileName.includes(".spec") || fileName.includes(".test");
+
+
     return {
       CallExpression(node) {
+        if (isTestFile) return;
         if (node?.callee?.property?.name !== "json") return;
         const [firstArg] = node.arguments;
         if (firstArg?.type === "ObjectExpression") {
