@@ -19,6 +19,12 @@ const en = {
         "Latitude is required and must be a float between -90 and 90",
       LONGITUDE_REQUIRED:
         "Longitude is required and must be a float between -180 and 180",
+      ADDRESS_REQUIRED:
+        "Address is required and must be a string with a minimum length of 3 characters",
+      CITY_REQUIRED:
+        "City is required and must be a string with a minimum length of 3 characters",
+      COUNTRY_REQUIRED:
+        "Country is required and must be a string with a minimum length of 3 characters",
     },
     ERROR: {
       INCOMPLETE_COORDINATES:
@@ -52,6 +58,7 @@ const en = {
       OPTIONAL_LIMIT_QUERY:
         "If provided, limit query must be an integer greater than 0",
       ENDPOINT_NOT_FOUND: "Endpoint not found",
+      INVALID_REQUEST: "Invalid request",
     },
   },
 };

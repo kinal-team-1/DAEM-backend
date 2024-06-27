@@ -7,7 +7,7 @@ import {
   getFeedPublicCases,
 } from "./public-case.controllers.js";
 import { pagination } from "../../middleware/pagination.js";
-import { bodyHasCoordinates } from "../../middleware/coordinates-validation.js";
+import { locationValidation } from "../../middleware/coordinates-validation.js";
 import { publicCaseValidation } from "../../middleware/public-case-validation.js";
 import { validateChecks } from "../../middleware/validate-checks.js";
 import { custom } from "../../middleware/custom.js";
@@ -62,7 +62,7 @@ router
     getFeedPublicCases,
   )
   .post(
-    [...publicCaseValidation, ...bodyHasCoordinates, validateChecks],
+    [...publicCaseValidation, ...locationValidation, validateChecks],
     createPublicCase,
   );
 
