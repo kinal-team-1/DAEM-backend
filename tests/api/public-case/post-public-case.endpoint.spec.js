@@ -5,24 +5,24 @@ import "@japa/api-client";
 
 const publicCaseRoute = "/api/public-case";
 
+const validPayload = {
+  title: "Case Title",
+  description: "Case Description 20 chars",
+  // mongo id
+  submitter: "5f9d1b3b5f3b9b001f3b9b00",
+
+  // location props
+  latitude: 1,
+  longitude: 1,
+  // lorem10
+  address: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
+  city: "City",
+  country: "Country",
+};
+
 test.group(
   `POST api/public-case should return ${StatusCodes.BAD_REQUEST} code when `,
   () => {
-    const validPayload = {
-      title: "Case Title",
-      description: "Case Description 20 chars",
-      // mongo id
-      submitter: "5f9d1b3b5f3b9b001f3b9b00",
-
-      // location props
-      latitude: 1,
-      longitude: 1,
-      // lorem10
-      address: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
-      city: "City",
-      country: "Country",
-    };
-
     test("request body is empty", async ({ client, expect }) => {
       const response = await client
         .post(publicCaseRoute)
@@ -45,5 +45,12 @@ test.group(
         ).toBe(true);
       });
     }
+  },
+);
+
+test.group(
+  `POST api/public-case should return ${StatusCodes.CREATED} code`,
+  () => {
+    test("when request body is valid");
   },
 );

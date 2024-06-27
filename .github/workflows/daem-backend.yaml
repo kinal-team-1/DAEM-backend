@@ -1,0 +1,79 @@
+name: Check Backend
+
+on:
+  # On every manul trigger
+  workflow_dispatch:
+
+  # on every pull request to develop or master
+  pull_request:
+    branches:
+      - develop
+      - master
+    paths:
+      - "src/**"
+      - "server.js"
+      - "i18n/**"
+      - "tests/**"
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+
+    services:
+      mongo:
+        image: mongo:7.0.11
+        env:
+          MONGO_INITDB_ROOT_USERNAME: root
+          MONGO_INITDB_ROOT_PASSWORD: root
+          MONGO_INITDB_DATABASE: daem-test
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd mongosh
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Create MongoDB User
+        run: |
+          docker exec -i $(docker ps -q --filter name=mongo) mongosh --host localhost:27017 -u root -p root --authenticationDatabase admin --quiet <<EOF
+            use daem-test
+            db.createUser({ user: 'app-user', pwd: 'app-password', roles: [{ role: 'readWrite', db: 'daem-test' }] })
+          EOF
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Set environment variables
+        run: |
+            rm .env.*
+            touch .env.test
+            echo "PORT=4000" >> .env.test
+            echo "MONGO_URL='mongodb://app-user:app-password@localhost:27017/daem-test'" >> .env.test
+            echo "JWT_SECRET='6bef1104a2bab0b3a9e9d27875e033da86547968fc3b6ebdbe3f068a2a466e9b'" >> .env.test
+
+      - name: Generate types
+        run: npm run typesafe-i18n:once
+
+      - name: Check eslint
+        run: npm run lint
+
+      - name: Check typescript
+        run: npm run ts
+
+      - name: Run tests with retry
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 2
+          max_attempts: 2
+          command: npm run test
+
