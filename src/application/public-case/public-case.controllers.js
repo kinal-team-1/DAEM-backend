@@ -2,8 +2,6 @@ import { getTranslationFunctions } from "../../utils/get-translations-locale.js"
 import { handleResponse } from "../../utils/handle-response.js";
 import { logger } from "../../utils/logger.js";
 import { PublicCase } from "./public-case.model.js";
-import { Location } from "../location/location.model.js";
-import mongoose from "mongoose";
 import { cleanObject } from "../../utils/clean-object.js";
 import { StatusCodes } from "http-status-codes";
 import {
@@ -45,8 +43,6 @@ export const getFeedPublicCases = async (req, res) => {
 
 export const createPublicCase = async (req, res) => {
   const LL = getTranslationFunctions(req.locale);
-  const session = await mongoose.startSession();
-  session.startTransaction();
   try {
     logger.info("Creating public case");
 
@@ -61,31 +57,25 @@ export const createPublicCase = async (req, res) => {
       submitter,
     } = req.body;
 
-    const location = new Location(
-      cleanObject({
-        latitude,
-        longitude,
-        address,
-        city,
-        country,
-        location_point: {
-          coordinates: [longitude, latitude],
-        },
-      }),
-    );
-
     const publicCase = new PublicCase(
       cleanObject({
         title,
         description,
         submitter,
-        location: location._id,
+        location: {
+          latitude,
+          longitude,
+          address,
+          city,
+          country,
+          location_point: {
+            coordinates: [longitude, latitude],
+          },
+        },
       }),
     );
 
-    await location.save();
     await publicCase.save();
-    await session.commitTransaction();
 
     res.status(StatusCodes.CREATED).json({
       data: publicCase,
@@ -93,12 +83,9 @@ export const createPublicCase = async (req, res) => {
     });
     logger.info("Successfully created public case");
   } catch (error) {
-    await session.abortTransaction();
     logger.error("Failed to create public case. error of type: " + error.name);
 
     handleResponse(res, error, LL);
-  } finally {
-    session.endSession();
   }
 };
 

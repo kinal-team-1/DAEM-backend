@@ -1,4 +1,4 @@
-import { body } from "express-validator";
+import { body, oneOf, query } from "express-validator";
 import { message } from "../utils/message.js";
 
 export const locationValidation = [
@@ -32,4 +32,39 @@ export const locationValidation = [
   )
     .isString()
     .isLength({ min: 3 }),
+];
+
+export const locationSearchQueryParams = [
+  query(
+    "lat",
+    message((LL) => LL.LOCATION.ROUTE.OPTIONAL_LATITUDE()),
+  )
+    .optional()
+    .isFloat({ min: -90, max: 90 })
+    .toFloat(),
+
+  query(
+    "long",
+    message((LL) => LL.LOCATION.ROUTE.OPTIONAL_LONGITUDE()),
+  )
+    .optional()
+    .isFloat({ min: -180, max: 180 })
+    .toFloat(),
+  query(
+    "radius",
+    message((LL) => LL.LOCATION.ROUTE.OPTIONAL_RADIUS()),
+  )
+    .optional()
+    .isInt({ min: 1 })
+    .toInt(10),
+  // either lat and long are both defined or both missing
+  oneOf(
+    [
+      [query("lat").exists(), query("long").exists()],
+      [query("lat").not().exists(), query("long").not().exists()],
+    ],
+    {
+      message: message((LL) => LL.LOCATION.ROUTE.INCOMPLETE_COORDINATES()),
+    },
+  ),
 ];

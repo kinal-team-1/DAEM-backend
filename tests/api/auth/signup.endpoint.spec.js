@@ -3,6 +3,12 @@ import { StatusCodes } from "http-status-codes";
 import "@japa/expect";
 import "@japa/api-client";
 import { hasError } from "../../utils/has-error.js";
+import {
+  createUser,
+  deleteUserById,
+  getRandomUser,
+  getRandomUsers,
+} from "../../utils/user.js";
 
 const validPayload = {
   username: "XxX_Jhondoe_XxX",
@@ -125,5 +131,49 @@ test.group(
       expect(response.body().data).toBeDefined();
       expect(response.body().message).toBeDefined();
     });
+
+    test("after deleting a user and creating it again", async ({
+      client,
+      expect,
+    }, user) => {
+      const createdUser = await createUser(user);
+      await deleteUserById(createdUser._id);
+
+      const response = await client
+        .post(authSignupRoute)
+        .json(user)
+        .then((res) => res);
+
+      expect(response.status()).toBe(StatusCodes.CREATED);
+      expect(response.body().data).toBeDefined();
+      expect(response.body().message).toBeDefined();
+    }).with(getRandomUsers(3));
+  },
+);
+
+test.group(
+  `POST /api/auth/signup Should return ${StatusCodes.CONFLICT} code when `,
+  () => {
+    test("email already taken", async ({ client, expect }, user) => {
+      await createUser({ ...getRandomUser(), email: user.email });
+
+      const response = await client
+        .post(authSignupRoute)
+        .json(user)
+        .then((res) => res);
+
+      expect(response.status()).toBe(StatusCodes.CONFLICT);
+    }).with(getRandomUsers(3));
+
+    test("username already taken", async ({ client, expect }, user) => {
+      await createUser({ ...getRandomUser(), username: user.username });
+
+      const response = await client
+        .post(authSignupRoute)
+        .json(user)
+        .then((res) => res);
+
+      expect(response.status()).toBe(StatusCodes.CONFLICT);
+    }).with(getRandomUsers(3));
   },
 );

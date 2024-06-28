@@ -108,6 +108,22 @@ const en = {
       INVALID_CREDENTIALS: "Invalid credentials",
     },
   },
+  ANONYMOUS_CASE: {
+    CONTROLLER: {
+      GET_FEED_SUCCESS: "Successfully got feed anonymous cases",
+      CREATED: "Successfully created anonymous case",
+      DELETED: "Successfully deleted anonymous case",
+    },
+    ROUTE: {
+      DESCRIPTION_REQUIRED:
+        "Description is required and must be a string with a minimum length of 20 characters",
+      ANONYMOUS_CASE_ID_REQUIRED:
+        "The URL must include a valid MongoDB ObjectId representing the anonymous case id.",
+    },
+    ERROR: {
+      NOT_FOUND: "Anonymous case not found",
+    },
+  },
 };
 
 export default en;

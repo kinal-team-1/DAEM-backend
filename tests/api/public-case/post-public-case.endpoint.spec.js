@@ -3,7 +3,7 @@ import { test } from "@japa/runner";
 import "@japa/expect";
 import "@japa/api-client";
 import { hasError } from "../../utils/has-error.js";
-import { createUser } from "../../utils/create-user.js";
+import { createUser } from "../../utils/user.js";
 
 const publicCaseRoute = "/api/public-case";
 

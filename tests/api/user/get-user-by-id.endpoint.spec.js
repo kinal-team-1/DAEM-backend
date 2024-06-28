@@ -2,7 +2,7 @@ import { test } from "@japa/runner";
 import "@japa/expect";
 import "@japa/api-client";
 import { StatusCodes } from "http-status-codes";
-import { createUser } from "../../utils/create-user.js";
+import { createUser } from "../../utils/user.js";
 
 test.group(
   `GET /api/user/:id should return ${StatusCodes.BAD_REQUEST} code when `,
