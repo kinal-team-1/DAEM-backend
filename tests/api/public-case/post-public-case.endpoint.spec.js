@@ -3,6 +3,7 @@ import { test } from "@japa/runner";
 import "@japa/expect";
 import "@japa/api-client";
 import { hasError } from "../../utils/has-error.js";
+import { createUser } from "../../utils/create-user.js";
 
 const publicCaseRoute = "/api/public-case";
 
@@ -57,6 +58,20 @@ test.group(
 test.group(
   `POST api/public-case should return ${StatusCodes.CREATED} code`,
   () => {
-    test("when request body is valid");
+    for (let i = 0; i < 5; i++) {
+      test("when request body is valid", async ({ client, expect }) => {
+        const user = await createUser();
+
+        const response = await client
+          .post(publicCaseRoute)
+          .json({ ...validPayload, submitter: user._id })
+          .then((res) => res);
+
+        expect(response.status()).toBe(StatusCodes.CREATED);
+        expect(response.body().data).toBeDefined();
+        expect(response.body().message).toBeDefined();
+        expect(response.body().data.submitter).toBe(user._id);
+      });
+    }
   },
 );

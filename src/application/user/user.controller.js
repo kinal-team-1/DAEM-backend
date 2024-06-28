@@ -3,6 +3,7 @@ import { logger } from "../../utils/logger.js";
 import { handleResponse } from "../../utils/handle-response.js";
 import { User } from "./user.model.js";
 import { StatusCodes } from "http-status-codes";
+import { UserNotFoundError } from "./user.errors.js";
 
 export const getAllUsers = async (req, res) => {
   const LL = getTranslationFunctions(req.locale);
@@ -41,6 +42,10 @@ export const getUserById = async (req, res) => {
 
     const { id } = req.params;
     const user = await User.findOne({ _id: id, tp_status: true });
+
+    if (!user) {
+      throw new UserNotFoundError(LL.USER.ERROR.NOT_FOUND());
+    }
 
     res.status(StatusCodes.OK).json({
       data: user,

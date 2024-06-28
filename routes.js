@@ -1,35 +1,14 @@
+import "./load-env.js";
 import express from "express";
 import cors from "cors";
-import { config } from "dotenv";
 import { getTranslationFunctions } from "./src/utils/get-translations-locale.js";
 import { StatusCodes } from "http-status-codes";
-import dbConnection from "./src/db/db-connection.js";
 import { printLanguage } from "./src/middleware/print-language.js";
 import { retrieveLocale } from "./src/middleware/retrieve-locale.js";
 import { logger } from "./src/utils/logger.js";
 import publicCasesRouter from "./src/application/public-case/public-case.routes.js";
 import authRouter from "./src/application/auth/auth.routes.js";
-
-if (process.env.NODE_ENV !== "production" && process.env.NODE_ENV !== "test") {
-  config({
-    path: [".env", ".env.example"],
-  });
-}
-
-if (process.env.NODE_ENV === "test") {
-  config({
-    path: [".env.test"],
-  });
-  // IF NODE_ENV is `test`, we should connect to the test database
-  // here, since later on it will be impossible to change the connection
-  await dbConnection();
-}
-
-console.log("NODE_ENV", {
-  NODE_ENV: process.env.NODE_ENV,
-  PORT: process.env.PORT,
-  MONGO_URL: process.env.MONGO_URL,
-});
+import userRouter from "./src/application/user/user.routes.js";
 
 export const app = express();
 
@@ -57,6 +36,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/public-case", publicCasesRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/user", userRouter);
 
 app.use(printLanguage);
 

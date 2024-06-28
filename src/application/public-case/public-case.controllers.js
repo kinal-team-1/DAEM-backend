@@ -87,7 +87,7 @@ export const createPublicCase = async (req, res) => {
     await publicCase.save();
     await session.commitTransaction();
 
-    res.status(StatusCodes.OK).json({
+    res.status(StatusCodes.CREATED).json({
       data: publicCase,
       message: LL.PUBLIC_CASE.CONTROLLER.CREATED(),
     });

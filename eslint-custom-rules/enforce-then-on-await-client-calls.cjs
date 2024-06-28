@@ -26,14 +26,17 @@ module.exports = {
     fixable: "code",
   },
   create(context) {
+    const filename = context.getFilename();
+    const isTestFile = filename.includes(".spec") || filename.includes(".test")
+
     return {
       AwaitExpression(node) {
-        const filename = context.getFilename();
-        if (!filename.includes(".spec") && !filename.includes(".test")) {
-          return;
-        }
-
+        if (!isTestFile) return;
         const awaitedExpression = node.argument;
+
+        const isChain = awaitedExpression.callee.type === "MemberExpression";
+        if (!isChain) return;
+
 
         const hasFinalThenCall =
           awaitedExpression.callee.property.name === "then";
