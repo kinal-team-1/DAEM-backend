@@ -39,7 +39,6 @@ const PublicCaseSchema = new Schema({
   ],
   updated_at: {
     type: Date,
-    default: Date.now,
   },
 
   tp_status: {

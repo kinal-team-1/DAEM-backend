@@ -17,6 +17,10 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
+  lastname: {
+    type: String,
+    required: true,
+  },
   is_verified: {
     type: Boolean,
     default: false,
@@ -31,7 +35,6 @@ const UserSchema = new Schema({
   },
   updated_at: {
     type: Date,
-    default: Date.now,
   },
 });
 

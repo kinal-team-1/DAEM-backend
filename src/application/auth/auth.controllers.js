@@ -10,7 +10,7 @@ import { StatusCodes } from "http-status-codes";
 export const login = async (req, res) => {
   const LL = getTranslationFunctions(req.locale);
   try {
-    logger.info("Login request received");
+    logger.info("Login started");
 
     const { username, email, password } = req.body;
 
@@ -39,6 +39,36 @@ export const login = async (req, res) => {
     logger.info("User logged in successfully");
   } catch (error) {
     logger.error("Failed attempt to log in. Error of type " + error.name);
+
+    handleResponse(res, error, LL);
+  }
+};
+
+export const signup = async (req, res) => {
+  const LL = getTranslationFunctions(req.locale);
+  try {
+    logger.info("Signup started");
+
+    const { username, email, password, name, lastname } = req.body;
+
+    const user = new User({
+      username,
+      email,
+      password: await bcryptjs.hash(password, 10),
+      name,
+      lastname,
+    });
+
+    await user.save();
+
+    res.status(StatusCodes.CREATED).json({
+      data: user,
+      message: LL.AUTH.CONTROLLER.REGISTER_SUCCESS(),
+    });
+
+    logger.info("User registered successfully");
+  } catch (error) {
+    logger.error("Failed attempt to register. Error of type " + error.name);
 
     handleResponse(res, error, LL);
   }

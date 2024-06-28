@@ -7,3 +7,11 @@ export class UserNotFoundError extends Error {
     this.name = "UserNotFoundError";
   }
 }
+
+export class UserAlreadyExistsError extends Error {
+  constructor(message) {
+    super(message);
+    this.statusCode = StatusCodes.CONFLICT;
+    this.name = "UsernameAlreadyExistsError";
+  }
+}

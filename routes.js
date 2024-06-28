@@ -8,6 +8,7 @@ import { printLanguage } from "./src/middleware/print-language.js";
 import { retrieveLocale } from "./src/middleware/retrieve-locale.js";
 import { logger } from "./src/utils/logger.js";
 import publicCasesRouter from "./src/application/public-case/public-case.routes.js";
+import authRouter from "./src/application/auth/auth.routes.js";
 
 if (process.env.NODE_ENV !== "production" && process.env.NODE_ENV !== "test") {
   config({
@@ -49,19 +50,22 @@ app.use(cors());
 app.use(retrieveLocale);
 
 app.get("/", (req, res) => {
+  // @ts-ignore
   const LL = getTranslationFunctions(req.locale);
   res.status(StatusCodes.OK).json({ message: LL.HI(), data: undefined });
 });
 
 app.use("/api/public-case", publicCasesRouter);
+app.use("/api/auth", authRouter);
 
 app.use(printLanguage);
 
 app.use("*", (req, res) => {
-  const locale = (req.headers["accept-language"] || "en").slice(0, 2);
-  const LL = getTranslationFunctions(locale);
+  logger.request_info("Route not found " + req.path);
+  // @ts-ignore
+  const LL = getTranslationFunctions(req.locale);
 
   res
     .status(StatusCodes.NOT_FOUND)
-    .json({ message: LL.GENERAL.ROUTES.ENDPOINT_NOT_FOUND(), data: undefined });
+    .json({ message: LL.GENERAL.ROUTE.ENDPOINT_NOT_FOUND(), data: undefined });
 });

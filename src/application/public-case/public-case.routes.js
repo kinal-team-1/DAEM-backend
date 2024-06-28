@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { message } from "../../utils/message.js";
-import { param, query } from "express-validator";
+import { oneOf, param, query } from "express-validator";
 import {
   createPublicCase,
   deletePublicCase,
@@ -13,7 +13,6 @@ import { validateChecks } from "../../middleware/validate-checks.js";
 import { custom } from "../../middleware/custom.js";
 import { PublicCase } from "./public-case.model.js";
 import { PublicCaseNotFoundError } from "./public-case.errors.js";
-import { LocationIncompleteCoordinatesError } from "../location/location-error.error.js";
 
 const router = Router();
 
@@ -44,20 +43,18 @@ router
         .optional()
         .isInt({ min: 1 })
         .toInt(10),
+      // either lat and long are both defined or both missing
+      oneOf(
+        [
+          [query("lat").exists(), query("long").exists()],
+          [query("lat").not().exists(), query("long").not().exists()],
+        ],
+        {
+          message: message((LL) => LL.LOCATION.ROUTE.INCOMPLETE_COORDINATES()),
+        },
+      ),
+      // need to recheck
       validateChecks,
-
-      custom(async (req, LL) => {
-        const { lat, long } = req.query;
-
-        const oneIsDefined = Number.isFinite(lat) || Number.isFinite(long);
-        const oneIsMissing = !Number.isFinite(lat) || !Number.isFinite(long);
-
-        if (oneIsDefined && oneIsMissing) {
-          throw new LocationIncompleteCoordinatesError(
-            LL.LOCATION.ERROR.INCOMPLETE_COORDINATES(),
-          );
-        }
-      }),
     ],
     getFeedPublicCases,
   )

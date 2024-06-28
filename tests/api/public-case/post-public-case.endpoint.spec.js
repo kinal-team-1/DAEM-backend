@@ -2,6 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import { test } from "@japa/runner";
 import "@japa/expect";
 import "@japa/api-client";
+import { hasError } from "../../utils/has-error.js";
 
 const publicCaseRoute = "/api/public-case";
 
@@ -40,8 +41,13 @@ test.group(
           .then((res) => res);
 
         expect(response.status()).toBe(StatusCodes.BAD_REQUEST);
+        expect(response.body().errors.length).toBe(1);
         expect(
-          response.body().errors.some((msg) => msg.includes(`body[${key}]`)),
+          hasError({
+            body: response.body(),
+            locations: ["body"],
+            fields: [key],
+          }),
         ).toBe(true);
       });
     }

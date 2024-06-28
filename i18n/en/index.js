@@ -35,11 +35,10 @@ const en = {
         "City is required and must be a string with a minimum length of 3 characters",
       COUNTRY_REQUIRED:
         "Country is required and must be a string with a minimum length of 3 characters",
-    },
-    ERROR: {
       INCOMPLETE_COORDINATES:
         "If one either latitude or longitude is provided, both must be provided",
     },
+    ERROR: {},
   },
   PUBLIC_CASE: {
     CONTROLLER: {
@@ -73,6 +72,9 @@ const en = {
     },
     ERROR: {
       NOT_FOUND: "User not found",
+      USERNAME_ALREADY_EXISTS:
+        "Username already exists, username must be unique",
+      EMAIL_ALREADY_EXISTS: "Email already exists, email must be unique",
     },
   },
   AUTH: {
@@ -84,14 +86,22 @@ const en = {
     },
     ROUTE: {
       USERNAME_REQUIRED:
-        "Username is required and must be a string between 3 and 20 characters",
+        "Username is required and must be a string with a minimum length of 3 characters",
       EMAIL_REQUIRED: "Email is required and must be a valid email address",
+      USERNAME_OPTIONAL:
+        "If provided, username must be a string with a minimum length of 3 characters",
+      EMAIL_OPTIONAL: "If provided, email must be a valid email address",
       PASSWORD_REQUIRED:
-        "Password is required and must be a string with a minimum length of 8 characters",
+        "Password is required and must be a string with a minimum length of 8 characters," +
+        " must have 1 lowercase letter, 1 uppercase letter and 1 number",
       USER_ID_REQUIRED:
         "The URL must include a valid MongoDB ObjectId representing the user id.",
       EITHER_USERNAME_OR_EMAIL_REQUIRED:
         "Either username or email is required, the email must be a valid email address, and the username must be a string at least 3 characters long",
+      NAME_REQUIRED:
+        "Name is required and must be a string with at least 2 characters",
+      LASTNAME_REQUIRED:
+        "Lastname is required and must be a string with at least 2 characters",
     },
     ERROR: {
       NOT_FOUND: "User not found",
