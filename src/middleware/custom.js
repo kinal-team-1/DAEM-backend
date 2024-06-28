@@ -16,8 +16,12 @@ export const custom = (fn) => {
       await fn(req, LL);
       next();
     } catch (error) {
+      const isCustom = error.name !== "Error";
+
       logger.error("Custom middleware error of type: " + error.name);
-      logger.error(error.stack);
+
+      if (isCustom) logger.error(error.stack);
+      else logger.fatal(error.stack);
 
       res
         .status(error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR)

@@ -5,7 +5,8 @@
   "type": "module",
   "main": "server",
   "scripts": {
-    "test": "cross-env NODE_ENV=test node bin/test.js --fail",
+    "test": "cross-env NODE_ENV=test node bin/test.js --failed",
+    "test:debug": "cross-env NODE_ENV=test DEBUG=true node bin/test.js --failed",
     "lint": "eslint .",
     "ts": "npx tsc --noEmit --skipLibCheck",
     "dev": "run-p dev:server typesafe-i18n",
@@ -24,8 +25,12 @@
     "@japa/expect": "^3.0.0-1",
     "@japa/runner": "^3.0.0-9",
     "@joao-cst/eslint-plugin": "file:./eslint-custom-rules",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
     "@types/supertest": "^6.0.2",
     "cross-env": "^7.0.3",
+    "deasync": "^0.1.30",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-config-xo": "^0.45.0",
@@ -40,6 +45,7 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
@@ -49,6 +55,7 @@
     "mongoose": "^8.4.0",
     "morgan": "^1.10.0",
     "pino": "^9.1.0",
+    "pino-caller": "^3.4.0",
     "pino-pretty": "^11.1.0",
     "typesafe-i18n": "^5.26.2"
   }

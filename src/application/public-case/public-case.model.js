@@ -19,11 +19,6 @@ const PublicCaseSchema = new Schema({
     required: true,
     default: Date.now,
   },
-  location: {
-    type: Schema.Types.ObjectId,
-    ref: "Location",
-    required: true,
-  },
   is_verified: {
     type: Boolean,
     required: true,
@@ -39,14 +34,35 @@ const PublicCaseSchema = new Schema({
   ],
   updated_at: {
     type: Date,
-    default: Date.now,
   },
 
   tp_status: {
-    type: String,
+    type: Boolean,
     required: true,
     default: true,
   },
+
+  location: {
+    type: {
+      address: String,
+      city: String,
+      country: String,
+      location_point: {
+        type: {
+          type: String,
+          enum: ["Point"],
+          required: true,
+          default: "Point",
+        },
+        coordinates: {
+          type: [Number],
+          required: true,
+        },
+      },
+    },
+    required: true,
+  },
 });
 
+PublicCaseSchema.index({ "location.location_point": "2dsphere" });
 export const PublicCase = model("PublicCase", PublicCaseSchema);
