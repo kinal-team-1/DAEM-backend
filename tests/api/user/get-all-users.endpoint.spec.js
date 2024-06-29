@@ -16,7 +16,7 @@ test.group(`GET /api/user Should return ${StatusCodes.OK} code when`, () => {
     { users: getRandomUsers(3), page: 1, limit: undefined, expected: 3 },
     { users: getRandomUsers(5), page: 1, limit: 2, expected: 2 },
     { users: getRandomUsers(11), page: 3, limit: 5, expected: 1 },
-    { users: getRandomUsers(14), page: 5, limit: 3, expected: 2 },
+    { users: getRandomUsers(8), page: 3, limit: 3, expected: 2 },
   ]) {
     test(`there are ${users.length} users and expects to retrieve ${expected}. {limit: ${limit}, page: ${page}}`, async ({
       client,
