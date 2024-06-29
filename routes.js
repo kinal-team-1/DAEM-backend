@@ -9,6 +9,7 @@ import { logger } from "./src/utils/logger.js";
 import publicCasesRouter from "./src/application/public-case/public-case.routes.js";
 import authRouter from "./src/application/auth/auth.routes.js";
 import userRouter from "./src/application/user/user.routes.js";
+import anonymousCaseRoutes from "./src/application/anonymous-cases/anonymous-case.routes.js";
 
 export const app = express();
 
@@ -37,6 +38,7 @@ app.get("/", (req, res) => {
 app.use("/api/public-case", publicCasesRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
+app.use("/api/anonymous-case", anonymousCaseRoutes);
 
 app.use(printLanguage);
 

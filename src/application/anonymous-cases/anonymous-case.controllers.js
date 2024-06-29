@@ -10,6 +10,7 @@ import {
   generateKey,
 } from "./anonymous-case.utils.js";
 import mongoose from "mongoose";
+import { AnonymousKey } from "../anonymous-key/anonymous-key.model.js";
 
 export const getAllAnonymousCases = async (req, res) => {
   const LL = getTranslationFunctions(req.locale);
@@ -58,10 +59,10 @@ export const createAnonymousCase = async (req, res) => {
 
     let anonymousCaseId;
     if (key) {
-      const anonymousCaseKey = await AnonymousCase.findOne({ key });
+      const anonymousCaseKey = await AnonymousKey.findOne({ key });
       anonymousCaseId = anonymousCaseKey._id;
     } else {
-      const anonymousCaseKey = new AnonymousCase({
+      const anonymousCaseKey = new AnonymousKey({
         key: generateKey(),
       });
       await anonymousCaseKey.save();
@@ -73,20 +74,31 @@ export const createAnonymousCase = async (req, res) => {
         description,
         key: anonymousCaseId,
         location: {
-          type: "Point",
-          coordinates: [latitude, longitude],
+          latitude,
+          longitude,
           address,
           city,
           country,
+          location_point: {
+            coordinates: [longitude, latitude],
+          },
         },
       }),
     );
 
     await anonymousCase.save();
+    await anonymousCase.populate({
+      path: "key",
+      select: "key -_id",
+    });
+
     await session.commitTransaction();
 
+    const value = anonymousCase.toJSON();
+
     res.status(StatusCodes.CREATED).json({
-      data: anonymousCase,
+      // @ts-ignore
+      data: { ...value, key: value.key?.key },
       message: LL.ANONYMOUS_CASE.CONTROLLER.CREATED(),
     });
 
@@ -98,5 +110,30 @@ export const createAnonymousCase = async (req, res) => {
     handleResponse(res, error, LL);
   } finally {
     session.endSession();
+  }
+};
+
+export const deleteAnonymousCaseById = async (req, res) => {
+  const LL = getTranslationFunctions(req.locale);
+  try {
+    logger.info("Starting to delete anonymous case");
+
+    const { id } = req.params;
+
+    const anonymousCase = await AnonymousCase.findOne({
+      _id: id,
+      tp_status: true,
+    });
+
+    res.status(StatusCodes.OK).json({
+      data: anonymousCase,
+      message: LL.ANONYMOUS_CASE.CONTROLLER.DELETED(),
+    });
+
+    logger.info("Successfully deleted anonymous case");
+  } catch (error) {
+    logger.error("Error deleting anonymous case. Error of type " + error.name);
+
+    handleResponse(res, error, LL);
   }
 };

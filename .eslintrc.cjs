@@ -26,7 +26,6 @@ module.exports = {
     sourceType: "module",
   },
   rules: {
-    indent: ["error", 2],
     "import/no-unresolved": 2,
     semi: ["error", "always"],
     "comma-dangle": ["error", "always-multiline"],

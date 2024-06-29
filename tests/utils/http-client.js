@@ -25,22 +25,16 @@ export class HttpClient {
       return map;
     }, {});
     const bodies = [];
+    const datasetFiltered = structuredClone(dataset); // deep clone
+
     for (let i = 0; i < amount; i++) {
-      const body = this.getRandomBody(dataset);
-      // avoid du
-      const isSomeUniquePropRepeated = Object.keys(mapUniqueProps).some(
-        (prop) => {
-          return mapUniqueProps[prop].has(body[prop]);
-        },
-      );
-      // avoid duplicates
-      if (isSomeUniquePropRepeated) {
-        i--;
-        continue;
-      }
+      const body = this.getRandomBody(datasetFiltered);
 
       Object.keys(mapUniqueProps).forEach((prop) => {
         mapUniqueProps[prop].add(body[prop]);
+        datasetFiltered[prop] = datasetFiltered[prop].filter(
+          (value) => !mapUniqueProps[prop].has(value),
+        );
       });
 
       bodies.push(body);

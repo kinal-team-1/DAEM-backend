@@ -4,7 +4,7 @@ const AnonymousCaseSchema = new Schema({
   // unique key identifier to follow up on the case
   key: {
     type: Schema.Types.ObjectId,
-    ref: "AnonymousCase",
+    ref: "AnonymousKey",
     required: true,
   },
 
@@ -42,5 +42,7 @@ const AnonymousCaseSchema = new Schema({
     required: true,
   },
 });
+
+AnonymousCaseSchema.index({ "location.location_point": "2dsphere" });
 
 export const AnonymousCase = model("AnonymousCase", AnonymousCaseSchema);
