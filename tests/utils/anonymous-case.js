@@ -2,23 +2,6 @@ import { HttpClient } from "./http-client.js";
 import { API_URL_TEST } from "./config.js";
 
 const possibleCases = {
-  title: [
-    "Suspected child labor in local factory",
-    "Unaccompanied minors selling goods on street",
-    "Possible trafficking at bus station",
-    "Children begging near shopping center",
-    "Underage workers in construction site",
-    "Suspected brothel employing minors",
-    "Child performers working late hours",
-    "Minors involved in drug distribution",
-    "Children in hazardous agricultural work",
-    "Possible domestic servitude situation",
-    "Underage marriage report",
-    "Children used for political demonstrations",
-    "Minors in dangerous street performances",
-    "Suspected online exploitation of children",
-    "Underage workers in local restaurants",
-  ],
   description: [
     "Multiple children observed working long hours in a textile factory, appearing to be under legal working age.",
     "Group of young children selling trinkets to passersby late at night, no adult supervision visible.",
@@ -35,23 +18,6 @@ const possibleCases = {
     "Young children performing dangerous acrobatic acts on busy streets for money.",
     "Tip received about an online group exploiting and sharing inappropriate content involving minors.",
     "Multiple restaurants in the area reportedly employing children for kitchen and serving duties.",
-  ],
-  submitter: [
-    "507f1f77bcf86cd799439011",
-    "507f1f77bcf86cd799439012",
-    "507f1f77bcf86cd799439013",
-    "507f1f77bcf86cd799439014",
-    "507f1f77bcf86cd799439015",
-    "507f1f77bcf86cd799439016",
-    "507f1f77bcf86cd799439017",
-    "507f1f77bcf86cd799439018",
-    "507f1f77bcf86cd799439019",
-    "507f1f77bcf86cd799439020",
-    "507f1f77bcf86cd799439021",
-    "507f1f77bcf86cd799439022",
-    "507f1f77bcf86cd799439023",
-    "507f1f77bcf86cd799439024",
-    "507f1f77bcf86cd799439025",
   ],
   latitude: [
     40.7128, 40.7138, 40.7118, 40.7108, 40.7148, 40.7158, 40.7168, 40.7178,
@@ -112,27 +78,43 @@ const possibleCases = {
     "United States",
     "United States",
   ],
+  // key: [
+  //   "507f1f77bcf86cd799439011",
+  //   "507f1f77bcf86cd799439012",
+  //   "507f1f77bcf86cd799439013",
+  //   "507f1f77bcf86cd799439014",
+  //   "507f1f77bcf86cd799439015",
+  //   "507f1f77bcf86cd799439016",
+  //   "507f1f77bcf86cd799439017",
+  //   "507f1f77bcf86cd799439018",
+  //   "507f1f77bcf86cd799439019",
+  //   "507f1f77bcf86cd799439020",
+  //   "507f1f77bcf86cd799439021",
+  //   "507f1f77bcf86cd799439022",
+  //   "507f1f77bcf86cd799439023",
+  //   "507f1f77bcf86cd799439024",
+  //   "507f1f77bcf86cd799439025",
+  // ],
 };
 
-const httpClient = new HttpClient(`${API_URL_TEST}/api/public-case`, [
-  "submitter",
-  "title",
+const httpClient = new HttpClient(`${API_URL_TEST}/api/anonymous-case`, [
   "description",
   "latitude",
   "longitude",
   "address",
   "city",
   "country",
+  // "key",
 ]);
 
-export const createPublicCase = async (payload) => {
-  const { data: publicCase } = await httpClient
+export const createAnonymousCase = async (payload) => {
+  const { data: anonymousCase } = await httpClient
     .with(possibleCases)
     .post(payload);
 
-  return publicCase;
+  return anonymousCase;
 };
 
-export const getRandomPublicCases = (amount) => {
+export const getRandomAnonymousCases = (amount) => {
   return httpClient.getRandomBodies(amount, possibleCases);
 };

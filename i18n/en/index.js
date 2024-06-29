@@ -110,7 +110,7 @@ const en = {
   },
   ANONYMOUS_CASE: {
     CONTROLLER: {
-      GET_FEED_SUCCESS: "Successfully got feed anonymous cases",
+      GET_ALL_SUCCESS: "Successfully got all anonymous cases",
       CREATED: "Successfully created anonymous case",
       DELETED: "Successfully deleted anonymous case",
     },

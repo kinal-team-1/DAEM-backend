@@ -1,6 +1,5 @@
 import { HttpClient } from "./http-client.js";
-
-const API_URL_TEST = `http://localhost:${process.env.PORT}`;
+import { API_URL_TEST } from "./config.js";
 
 const possibleUsers = {
   name: [

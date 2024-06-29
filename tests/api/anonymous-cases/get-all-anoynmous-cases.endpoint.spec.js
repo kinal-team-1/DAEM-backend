@@ -1,22 +1,24 @@
+import { test } from "@japa/runner";
+
 import "@japa/expect";
 import "@japa/api-client";
 import { StatusCodes } from "http-status-codes";
-import { test } from "@japa/runner";
 import { hasError } from "../../utils/has-error.js";
 import {
-  createPublicCase,
-  getRandomPublicCases,
-} from "../../utils/public-case.js";
-import { createUser } from "../../utils/user.js";
+  createAnonymousCase,
+  getRandomAnonymousCases,
+} from "../../utils/anonymous-case.js";
 
-const publicCaseRoutes = "/api/public-case";
+const anonymousCaseRoute = "/api/anonymous-case";
 
 test.group(
-  `GET /api/public-case Should return ${StatusCodes.OK} code when `,
+  `GET /api/anonymous-case Should return ${StatusCodes.OK} code when `,
   () => {
     test(`no query params are provided`, async ({ client, expect }) => {
-      const response = await client.get(publicCaseRoutes).then((res) => res);
+      const response = await client.get(anonymousCaseRoute).then((res) => res);
       expect(response.status()).toBe(StatusCodes.OK);
+      expect(response.body().message).toBeDefined();
+      expect(response.body().data).toBeDefined();
     });
 
     test(`valid lat and long query params are provided`, async ({
@@ -28,7 +30,7 @@ test.group(
       urlSearchParams.append("long", long);
 
       const response = await client
-        .get(`${publicCaseRoutes}?${urlSearchParams.toString()}`)
+        .get(`${anonymousCaseRoute}?${urlSearchParams.toString()}`)
         .then((res) => res);
 
       expect(response.status()).toBe(StatusCodes.OK);
@@ -50,7 +52,7 @@ test.group(
       urlSearchParams.append("radius", radius);
 
       const response = await client
-        .get(`${publicCaseRoutes}?${urlSearchParams.toString()}`)
+        .get(`${anonymousCaseRoute}?${urlSearchParams.toString()}`)
         .then((res) => res);
 
       expect(response.status()).toBe(StatusCodes.OK);
@@ -62,16 +64,23 @@ test.group(
       // more random coordinates
     ]);
 
-    for (const { lat, long, radius, publicCases, expectedLength, params } of [
+    for (const {
+      lat,
+      long,
+      radius,
+      anonymousCases,
+      expectedLength,
+      params,
+    } of [
       {
-        publicCases: getRandomPublicCases(5),
+        anonymousCases: getRandomAnonymousCases(5),
         lat: 14.655_934_6,
         long: -90.565_942_9,
         radius: 1,
         expectedLength: 3,
       },
       {
-        publicCases: getRandomPublicCases(8),
+        anonymousCases: getRandomAnonymousCases(8),
         lat: -11.123_45,
         long: 12.345_67,
         radius: 10,
@@ -83,20 +92,17 @@ test.group(
         client,
         expect,
       }) => {
-        const user = await createUser();
-
-        const newPs = publicCases.map((p, i) => {
+        const listAnonymous = anonymousCases.map((p, i) => {
           return {
             ...p,
             // 0.001 is approximately 111 meters
             latitude: lat + 0.0021 * (i + 1),
             //   0.001 is approximately 111 meters
             longitude: long + 0.0021 * (i + 1), // if I want only 3 cases to be returned
-            submitter: user._id,
           };
         });
 
-        await Promise.all(newPs.map((p) => createPublicCase(p)));
+        await Promise.all(listAnonymous.map((p) => createAnonymousCase(p)));
 
         const urlSearchParams = new URLSearchParams();
         urlSearchParams.append("lat", lat);
@@ -108,7 +114,7 @@ test.group(
         }
 
         const response = await client
-          .get(`${publicCaseRoutes}?${urlSearchParams.toString()}`)
+          .get(`${anonymousCaseRoute}?${urlSearchParams.toString()}`)
           .then((res) => res);
 
         expect(response.status()).toBe(StatusCodes.OK);
@@ -121,14 +127,14 @@ test.group(
 );
 
 test.group(
-  `GET /api/public-case Should return ${StatusCodes.BAD_REQUEST} code when `,
+  `GET /api/anonymous-case Should return ${StatusCodes.BAD_REQUEST} code when `,
   () => {
     test(`lat query param is missing`, async ({ client, expect }, { long }) => {
       const urlSearchParams = new URLSearchParams();
       urlSearchParams.append("long", long);
 
       const response = await client
-        .get(`${publicCaseRoutes}?${urlSearchParams.toString()}`)
+        .get(`${anonymousCaseRoute}?${urlSearchParams.toString()}`)
         .then((res) => res);
 
       expect(response.status()).toBe(StatusCodes.BAD_REQUEST);
@@ -147,7 +153,7 @@ test.group(
       urlSearchParams.append("lat", lat);
 
       const response = await client
-        .get(`${publicCaseRoutes}?${urlSearchParams.toString()}`)
+        .get(`${anonymousCaseRoute}?${urlSearchParams.toString()}`)
         .then((res) => res);
 
       expect(response.status()).toBe(StatusCodes.BAD_REQUEST);
@@ -172,7 +178,7 @@ test.group(
       urlSearchParams.append("radius", radius);
 
       const response = await client
-        .get(`${publicCaseRoutes}?${urlSearchParams.toString()}`)
+        .get(`${anonymousCaseRoute}?${urlSearchParams.toString()}`)
         .then((res) => res);
 
       expect(response.status()).toBe(StatusCodes.BAD_REQUEST);

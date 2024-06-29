@@ -1,18 +1,18 @@
-import "@japa/expect";
-import "@japa/api-client";
 import { test } from "@japa/runner";
 import { StatusCodes } from "http-status-codes";
 import { hasError } from "../../utils/has-error.js";
-import { createPublicCase } from "../../utils/public-case.js";
+import "@japa/expect";
+import "@japa/api-client";
+import { createAnonymousCase } from "../../utils/anonymous-case.js";
 
-const publicCaseRoutes = "/api/public-case";
+const anonymousCaseRoute = "/api/anonymous-case";
 
 test.group(
-  `DELETE api/public-case/:id should return ${StatusCodes.BAD_REQUEST} code when`,
+  `DELETE api/anonymous-case/:id should return ${StatusCodes.BAD_REQUEST} code when`,
   () => {
     test("id is not a valid mongo id", async ({ client, expect }) => {
       const response = await client
-        .delete(`${publicCaseRoutes}/invalid-mongo-id`)
+        .delete(`${anonymousCaseRoute}/invalid-mongo-id`)
         .then((res) => res);
 
       expect(response.status()).toBe(StatusCodes.BAD_REQUEST);
@@ -29,11 +29,11 @@ test.group(
 );
 
 test.group(
-  `DELETE api/public-case/:id should return ${StatusCodes.NOT_FOUND} code when`,
+  `DELETE api/anonymous-case/:id should return ${StatusCodes.NOT_FOUND} code when`,
   () => {
-    test("public case not found", async ({ client, expect }) => {
+    test("anonymous case not found", async ({ client, expect }) => {
       const response = await client
-        .delete(`${publicCaseRoutes}/5f9d1b3b5f3b9b001f3b9b00`)
+        .delete(`${anonymousCaseRoute}/5f9d1b3b5f3b9b001f3b9b00`)
         .then((res) => res);
 
       expect(response.status()).toBe(StatusCodes.NOT_FOUND);
@@ -43,13 +43,13 @@ test.group(
 );
 
 test.group(
-  `DELETE api/public-case/:id should return ${StatusCodes.OK} code when`,
+  `DELETE api/anonymous-case/:id should return ${StatusCodes.OK} code when`,
   () => {
-    test("public case is found", async ({ client, expect }) => {
-      const publicCase = await createPublicCase();
+    test("anonymous case is found", async ({ client, expect }) => {
+      const anonymousCase = await createAnonymousCase();
 
       const response = await client
-        .delete(`${publicCaseRoutes}/${publicCase._id}`)
+        .delete(`${anonymousCaseRoute}/${anonymousCase._id}`)
         .then((res) => res);
 
       expect(response.status()).toBe(StatusCodes.OK);
