@@ -2,7 +2,6 @@ import { config } from "dotenv";
 import dbConnection from "./src/db/db-connection.js";
 
 if (process.env.NODE_ENV !== "production") {
-  console.log(process.env.NODE_ENV);
   config({
     path: [".env", ".env.example"],
   });

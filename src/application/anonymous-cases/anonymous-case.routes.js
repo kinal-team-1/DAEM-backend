@@ -32,6 +32,19 @@ router
       )
         .isString()
         .isLength({ min: 20 }),
+      body(
+        "attachment",
+        message((LL) => LL.PUBLIC_CASE.ROUTE.OPTIONAL_ATTACHMENT()),
+      )
+        .optional()
+        .isArray({ min: 1 }),
+      body(
+        "attachment.*",
+        message((LL) => LL.PUBLIC_CASE.ROUTE.OPTIONAL_ATTACHMENT()),
+      )
+        .optional()
+        .isString()
+        .notEmpty(),
       ...locationValidation,
       validateChecks,
     ],

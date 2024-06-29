@@ -3,7 +3,8 @@ import { AnonymousCase } from "./anonymous-case.model.js";
 export const findAnonymousCases = async (page, limit) => {
   return AnonymousCase.find({ tp_status: true })
     .skip((page - 1) * limit)
-    .limit(limit);
+    .limit(limit)
+    .populate("attachment");
 };
 
 export const findAnonymousCasesByCoordinates = async (
@@ -29,7 +30,13 @@ export const findAnonymousCasesByCoordinates = async (
     },
     { $skip: (page - 1) * limit },
     ...(limit ? [{ $limit: limit }] : []),
-  ]);
+    // populate attachment
+  ]).lookup({
+    from: "attachments",
+    localField: "attachment",
+    foreignField: "_id",
+    as: "attachment",
+  });
 };
 
 export const generateKey = () => {
