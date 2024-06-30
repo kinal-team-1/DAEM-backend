@@ -4,7 +4,7 @@ import { logger } from "./src/utils/logger.js";
 import { supabaseClient } from "./src/utils/supabase-client.js";
 
 export const removeStaleContent = nodeCron.schedule(
-  "*/15 * * * * *",
+  "0 */15 * * * *",
   // eslint-disable-next-line func-names
   async function removeStaleContentEvery15Min() {
     try {
