@@ -27,14 +27,17 @@ configure({
     });
     suite.setup(async () => {
       const connection = await dbConnection();
+
       console.log("API suite setup");
       const server = app.listen(process.env.PORT, () => {
         console.log(`Server running at http://localhost:${process.env.PORT}`);
       });
 
       return () => {
-        server.close();
-        connection.close();
+        setTimeout(() => {
+          server.close();
+          connection.close();
+        });
       };
     });
   },

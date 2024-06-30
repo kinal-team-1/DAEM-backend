@@ -122,7 +122,7 @@ export const deleteTemporaryFiles = async (req, res) => {
     await session.commitTransaction();
     res.status(StatusCodes.OK).json({
       message: LL.STALE_CONTENT.CONTROLLER.TEMPORARY_FILE_DELETED(),
-      data: staleList,
+      data: filepaths,
     });
     logger.info("Successfully deleted temporary file");
   } catch (error) {
