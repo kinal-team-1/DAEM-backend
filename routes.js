@@ -9,7 +9,7 @@ import { logger } from "./src/utils/logger.js";
 import publicCasesRouter from "./src/application/public-case/public-case.routes.js";
 import authRouter from "./src/application/auth/auth.routes.js";
 import userRouter from "./src/application/user/user.routes.js";
-import anonymousCaseRouter from "./src/application/anonymous-cases/anonymous-case.routes.js";
+import anonymousCaseRouter from "./src/application/anonymous-case/anonymous-case.routes.js";
 import attachmentRouter from "./src/application/attachment/attachment.routes.js";
 
 export const app = express();

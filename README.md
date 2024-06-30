@@ -1,121 +1,217 @@
-# Backend Example
+<p align="center">
+  <img src="https://raw.githubusercontent.com/PKief/vscode-material-icon-theme/ec559a9f6bfd399b82bb44393651661b08aaf7ba/icons/folder-markdown-open.svg" width="100" alt="project-logo">
+</p>
+<p align="center">
+    <h1 align="center">DAEM-BACKEND</h1>
+</p>
+<p align="center">
+    <em>Backend for Child Exploitation Reporting Application</em>
+</p>
+<p align="center">
+	<img src="https://img.shields.io/github/license/kinal-team-1/DAEM-backend?style=default&logo=opensourceinitiative&logoColor=white&color=0080ff" alt="license">
+	<img src="https://img.shields.io/github/last-commit/kinal-team-1/DAEM-backend?style=default&logo=git&logoColor=white&color=0080ff" alt="last-commit">
+	<img src="https://img.shields.io/github/languages/top/kinal-team-1/DAEM-backend?style=default&color=0080ff" alt="repo-top-language">
+	<img src="https://img.shields.io/github/languages/count/kinal-team-1/DAEM-backend?style=default&color=0080ff" alt="repo-language-count">
+<p>
+<p align="center">
+	<!-- default option, no dependency badges. -->
+</p>
 
-This is a Node.js backend application built with Express.js. It provides a RESTful API for managing currencies and includes features such as internationalization (i18n), custom ESLint rules, testing with Jest, and a MongoDB database connection.
+<br><!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary><br>
 
-## Features
+- [ Overview](#overview)
+- [ Features](#features)
+- [ Repository Structure](#repository-structure)
+- [ Modules](#modules)
+- [ Getting Started](#getting-started)
+  - [ Installation](#installation)
+  - [ Usage](#usage)
+  - [ Tests](#tests)
+- [ Project Roadmap](#project-roadmap)
+- [ Contributing](#contributing)
+- [ License](#license)
+</details>
+<hr>
 
-- **RESTful API**: The application exposes a RESTful API.
-- **Internationalization (i18n)**: The application supports internationalization using the `typesafe-i18n` library, allowing translations for different locales.
-- **Custom ESLint Rules**: The project includes custom ESLint rules to enforce best practices and coding standards.
-- **Testing with Japa**: The repo is configured to use JAPA for testing.
-- **MongoDB Integration**: The application connects to a MongoDB database for data persistence, using the `mongoose` library.
-- **Error Handling**: The application includes error handling and logging mechanisms using the `pino` logger.
-- **Environment Variables**: Configuration settings are managed through environment variables, with an example file (`.env.example`) provided.
-- **GitHub Actions**: A GitHub Actions workflow is included for running checks on pull requests and manual triggers, including linting, type checking, and tests.
+##  Overview
 
-## Getting Started
+The DAEM-Backend is the server-side component of a Child Exploitation Reporting Application. It provides a robust API for managing public and anonymous case reports, user authentication, and file attachments. The application aims to combat child abuse by offering a platform for reporting incidents, both publicly and anonymously, while maintaining user privacy and data security.
 
-1. Clone the repository: `git clone https://github.com/your-username/backend-example.git`
-2. Install dependencies: `npm install`
-3. (OPTIONAL) Set up environment variables by creating a `.env` file based on the `.env.example` file.
-4. (OPTIONAL) Generate the translations type with `npm run typesafe-i18n` (This is required if want to use `npm run start`)
-5. Start the development server: `npm run dev` (this runs `npm run typesafe-i18n` automatically)
+---
 
-## Scripts
+##  Features
 
-- `npm run dev`: Start the development server with hot reloading.
-- `npm run start`: Start the production server.
-- `npm run test`: Run the test suite.
-- `npm run lint`: Run ESLint for code linting.
-- `npm run ts`: Type-check the codebase using TypeScript.
-- `npm run typesafe-i18n`: Generate translation files for i18n.
-- `npm run once-typesafe-i18n`: Generate translation files once (without watching for changes).
+- User authentication and authorization
+- Public case reporting and management
+- Anonymous case reporting with unique key generation
+- File attachment handling using Supabase
+- Location-based case querying and filtering
+- Internationalization support
+- Custom error handling and logging
+- Robust testing setup using Japa
 
-## Project Structure
+---
 
-```
-.
-├── .env.example                    # Example environment variables file
-├── .env.test                       # Environment variables for testing
-├── .eslintignore                   # Files and directories to be ignored by ESLint
-├── .eslintrc.cjs                   # ESLint configuration file
-├── .github
-│   └── workflows
-│       └── example.yaml            # GitHub Actions workflow file
-├── .gitignore                      # Files and directories to be ignored by Git
-├── .nvmrc                          # Node version manager configuration file
-├── .prettierrc                     # Prettier code formatter configuration file
-├── .run
-│   └── run tests.run.xml           # Run configuration for tests
-├── .typesafe-i18n.json             # Configuration file for typesafe-i18n
-├── README.md                       # Project readme file
-├── eslint-custom-rules             # Custom ESLint rules directory
-│   ├── enforce-*.cjs              # Custom ESLint rule files
-│   └── package.json                # Package configuration for custom ESLint rules
-├── git-hooks
-│   └── commit-msg                  # Git hook for commit message validation
-├── i18n                            # Internationalization files
-│   ├── en                          # English translation files
-│   │   └── index.js
-│   ├── es                          # Spanish translation files
-│   │   └── index.js
-│   └── formatters.js               # Formatters for translation strings
-├── jest-before-each-test.js        # Setup file for Jest tests
-├── jest.config.mjs                 # Jest configuration file
-├── package-lock.json               # Locked version of dependencies
-├── package.json                    # Project package configuration
-├── routes.js                       # Express routes file
-├── server.js                       # Entry point for the server
-├── src
-│   ├── application
-│   ├── db
-│   │   └── db-connection.js        # Database connection setup
-│   ├── middleware                  # Express middleware
-│   │   ├── print-language.js       # Middleware to print the language
-│   │   ├── retrieve-locale.js      # Middleware to retrieve locale
-│   │   └── validate-checks.js      # Middleware for input validation
-│   └── utils
-│       ├── clean-object.js         # Utility function to clean objects
-│       ├── get-translations-locale.js # Utility function to get translation functions
-│       ├── http-errors.js          # HTTP error definitions
-│       ├── logger.js               # Logging utility
-│       └── message.js              # Utility for creating messages
-├── tests                           # japa tests directory
-└── tsconfig.json                   # TypeScript configuration file
+##  Repository Structure
+
+```sh
+└── DAEM-backend/
+    ├── .github/workflows/
+    ├── bin/
+    ├── eslint-custom-rules/
+    ├── i18n/
+    │   ├── en/
+    │   └── es/
+    ├── src/
+    │   ├── application/
+    │   │   ├── anonymous-case/
+    │   │   ├── anonymous-key/
+    │   │   ├── attachment/
+    │   │   ├── auth/
+    │   │   ├── public-case/
+    │   │   ├── stale-content/
+    │   │   └── user/
+    │   ├── db/
+    │   ├── middleware/
+    │   └── utils/
+    └── tests/
+        ├── api/
+        └── utils/
 ```
 
-The project follows a modular structure, with the main application logic residing in the `src` directory. The `src/application` directory contains modules, such as the `currency` module, which includes the controller, model, routes, and error definitions for managing currencies.
+---
 
-The `src/middleware` directory contains Express middleware functions for tasks like retrieving the locale, validating input, and printing the language.
+##  Modules
 
-The `src/utils` directory contains utility functions for tasks like logging, handling HTTP errors, cleaning objects, and creating messages.
+<details closed><summary>src.application.anonymous-cases</summary>
 
-The `routes.js` file defines the API routes and applies the necessary middleware functions.
+| File                                                                                                                                                   | Summary                                                                                             |
+|--------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------|
+| [anonymous-case.model.js](https://github.com/kinal-team-1/DAEM-backend/blob/master/src/application/anonymous-case/anonymous-case.model.js)             | Defines the MongoDB schema for anonymous cases, including location data and attachment references.  |
+| [anonymous-case.controllers.js](https://github.com/kinal-team-1/DAEM-backend/blob/master/src/application/anonymous-case/anonymous-case.controllers.js) | Implements controllers for creating, retrieving, and managing anonymous cases.                      |
+| [anonymous-case.utils.js](https://github.com/kinal-team-1/DAEM-backend/blob/master/src/application/anonymous-case/anonymous-case.utils.js)             | Provides utility functions for anonymous case operations, such as key generation and case querying. |
+| [anonymous-case.routes.js](https://github.com/kinal-team-1/DAEM-backend/blob/master/src/application/anonymous-case/anonymous-case.routes.js)           | Defines API routes for anonymous case-related operations.                                           |
+| [anonymous-case.errors.js](https://github.com/kinal-team-1/DAEM-backend/blob/master/src/application/anonymous-case/anonymous-case.errors.js)           | Contains custom error classes for handling anonymous case-specific errors.                          |
 
-The `server.js` file is the entry point of the application, where the Express server is created and started, and the database connection is established.
+</details>
 
-The `tests` directory contains Jest tests for the various components of the application, such as the currency endpoints and a health check.
+<details closed><summary>src.application.public-case</summary>
 
-The `i18n` directory contains the translation files for different locales, managed by the `typesafe-i18n` library.
+| File                                                                                                                                          | Summary                                                                                   |
+|-----------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|
+| [public-case.model.js](https://github.com/kinal-team-1/DAEM-backend/blob/master/src/application/public-case/public-case.model.js)             | Defines the MongoDB schema for public cases, including user references and location data. |
+| [public-case.controllers.js](https://github.com/kinal-team-1/DAEM-backend/blob/master/src/application/public-case/public-case.controllers.js) | Implements controllers for creating, retrieving, and managing public cases.               |
+| [public-case.utils.js](https://github.com/kinal-team-1/DAEM-backend/blob/master/src/application/public-case/public-case.utils.js)             | Provides utility functions for public case operations, such as filtering and querying.    |
+| [public-case.routes.js](https://github.com/kinal-team-1/DAEM-backend/blob/master/src/application/public-case/public-case.routes.js)           | Defines API routes for public case-related operations.                                    |
+| [public-case.errors.js](https://github.com/kinal-team-1/DAEM-backend/blob/master/src/application/public-case/public-case.errors.js)           | Contains custom error classes for handling public case-specific errors.                   |
 
-The project also includes configuration files for tools like ESLint, Prettier, TypeScript, and typesafe-i18n, as well as custom ESLint rules defined in the `eslint-custom-rules` directory.
+</details>
 
-The `.github/workflows/example.yaml` file defines a GitHub Actions workflow for running checks on pull requests and manual triggers. It sets up a MongoDB service, installs dependencies, and runs linting, type checking, and tests.
+<details closed><summary>src.application.auth</summary>
 
-## Functioning
+| File                                                                                                                     | Summary                                                                    |
+|--------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------|
+| [auth.controllers.js](https://github.com/kinal-team-1/DAEM-backend/blob/master/src/application/auth/auth.controllers.js) | Implements authentication controllers for user registration and login.     |
+| [auth.routes.js](https://github.com/kinal-team-1/DAEM-backend/blob/master/src/application/auth/auth.routes.js)           | Defines API routes for authentication-related operations.                  |
+| [auth.errors.js](https://github.com/kinal-team-1/DAEM-backend/blob/master/src/application/auth/auth.errors.js)           | Contains custom error classes for handling authentication-specific errors. |
 
-The application follows a typical RESTful API structure, with routes defined for different resources (in this case, currencies). The `routes.js` file sets up the routes and applies middleware functions for tasks like retrieving the locale, validating input, and printing the language.
+</details>
 
-When a request is made to a specific route, the corresponding controller function is executed. For example, the `createCurrency` function in `currency.controller.js` is responsible for handling the creation of a new currency. This function performs input validation, creates a new `Currency` instance using the `currency.model.js` file, and saves it to the database.
+<details closed><summary>src.application.attachment</summary>
 
-The application uses the `mongoose` library to interact with the MongoDB database. The `currency.model.js` file defines the schema for the `Currency` model, including fields like `symbol`, `name`, `key`, and `tp_status` (which indicates whether the currency is active or inactive).
+| File                                                                                                                                       | Summary                                                                         |
+|--------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------|
+| [attachment.model.js](https://github.com/kinal-team-1/DAEM-backend/blob/master/src/application/attachment/attachment.model.js)             | Defines the MongoDB schema for file attachments.                                |
+| [attachment.controllers.js](https://github.com/kinal-team-1/DAEM-backend/blob/master/src/application/attachment/attachment.controllers.js) | Implements controllers for handling file uploads and retrievals using Supabase. |
+| [attachment.routes.js](https://github.com/kinal-team-1/DAEM-backend/blob/master/src/application/attachment/attachment.routes.js)           | Defines API routes for attachment-related operations.                           |
+| [attachment.errors.js](https://github.com/kinal-team-1/DAEM-backend/blob/master/src/application/attachment/attachment.errors.js)           | Contains custom error classes for handling attachment-specific errors.          |
 
-Error handling is performed using custom error classes defined in `currency.error.js`, and logging is handled using the `pino` logger in `logger.js`.
+</details>
 
-The application supports internationalization using the `typesafe-i18n` library. Translation files for different locales are stored in the `i18n` directory, and the `get-translations-locale.js` utility function provides a way to retrieve translation functions based on the current locale.
+---
 
-The project includes unit tests for the currency endpoints and a health check, written using the Jest testing framework. These tests can be run using the `npm run test` command.
+##  Getting Started
 
-The GitHub Actions workflow defined in `.github/workflows/example.yaml` sets up a MongoDB service, installs dependencies, and runs linting, type checking, and tests on pull requests and manual triggers. This helps ensure code quality and catch potential issues early in the development process.
+###  Installation
 
-Overall, the application follows a well-structured and modular approach, with separation of concerns and adherence to best practices for Node.js backend development.
+1. Clone the DAEM-backend repository:
+```sh
+git clone https://github.com/kinal-team-1/DAEM-backend
+```
+
+2. Change to the project directory:
+```sh
+cd DAEM-backend
+```
+
+3. Install the dependencies:
+```sh
+npm install
+```
+
+4. Pull the DB mongo replica set enabled image for local development, we recommend using `make` for this:
+```sh
+make
+```
+
+###  Usage
+
+1. Set up environment variables:
+   - You can use `.env.example` or create `.env` and set up your own supabase credentials.
+
+2. Start the server:
+```sh
+npm run dev
+```
+
+###  Tests
+
+Run the test suite using the command below:
+```sh
+npm test
+```
+
+---
+
+##  Project Roadmap
+
+- [X] Implement basic CRUD operations for public and anonymous cases
+- [X] Set up authentication system
+- [X] Integrate file upload functionality with Supabase
+- [X] Implement location-based case querying
+- [X] Add internationalization support
+- [ ] Develop case contribution endpoints
+
+---
+
+##  Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+---
+
+##  License
+
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
+
+---
+
+## Contributions
+
+this project was made by students of KINAL, Guatemala.
+
+<details closed>
+<summary>Contributor Graph</summary>
+<br>
+<p align="center">
+   <a href="https://github.com{/kinal-team-1/DAEM-backend/}graphs/contributors">
+      <img src="https://contrib.rocks/image?repo=kinal-team-1/DAEM-backend">
+   </a>
+</p>
+</details>
+
+[**Return**](#-overview)
+
+---
