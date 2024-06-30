@@ -21,6 +21,10 @@ const AnonymousCaseSchema = new Schema({
     type: Boolean,
     default: true,
   },
+  attachment: {
+    type: Schema.Types.ObjectId,
+    ref: "Attachment",
+  },
   location: {
     type: {
       address: String,

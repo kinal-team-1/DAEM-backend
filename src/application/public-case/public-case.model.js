@@ -24,14 +24,10 @@ const PublicCaseSchema = new Schema({
     required: true,
     default: false,
   },
-  attachments: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Attachment",
-      required: true,
-      default: [],
-    },
-  ],
+  attachment: {
+    type: Schema.Types.ObjectId,
+    ref: "Attachment",
+  },
   updated_at: {
     type: Date,
   },

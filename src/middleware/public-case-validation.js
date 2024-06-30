@@ -20,4 +20,17 @@ export const publicCaseValidation = [
     "submitter",
     message((LL) => LL.PUBLIC_CASE.ROUTE.SUBMITTER_REQUIRED()),
   ).isMongoId(),
+  body(
+    "attachment",
+    message((LL) => LL.PUBLIC_CASE.ROUTE.OPTIONAL_ATTACHMENT()),
+  )
+    .optional()
+    .isArray({ min: 1 }),
+  body(
+    "attachment.*",
+    message((LL) => LL.PUBLIC_CASE.ROUTE.OPTIONAL_ATTACHMENT()),
+  )
+    .optional()
+    .isString()
+    .notEmpty(),
 ];

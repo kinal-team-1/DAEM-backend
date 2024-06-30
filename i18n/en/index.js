@@ -55,9 +55,13 @@ const en = {
         "Submitter is required and must be a valid MongoDB ObjectId",
       PUBLIC_CASE_ID_REQUIRED:
         "The URL must include a valid MongoDB ObjectId representing the public case id.",
+      OPTIONAL_ATTACHMENT:
+        "If provided, attachment must be an array of non empty pathfiles uploaded",
     },
     ERROR: {
       NOT_FOUND: "Public case not found",
+      FAILED_UPLOAD_IMAGES:
+        "Failed to upload images and link images to the case, please try again",
     },
   },
   USER: {
@@ -122,6 +126,37 @@ const en = {
     },
     ERROR: {
       NOT_FOUND: "Anonymous case not found",
+      FAILED_UPLOAD_IMAGES:
+        "Failed to upload images and link images to the case, please try again",
+    },
+  },
+  ATTACHMENT: {
+    CONTROLLER: {
+      SIGNED_URL_CREATED: "Signed URL created successfully",
+    },
+    ROUTE: {
+      FILE_REQUIRED: "File is required",
+      ATTACHMENT_ID_REQUIRED:
+        "The URL must include a valid MongoDB ObjectId representing the attachment id.",
+    },
+    ERROR: {
+      CREATE_UPLOAD_SIGNED_URL: "Error creating upload signed URL",
+      CREATE_GET_SIGNED_URL: "Error creating get signed URL",
+      NOT_FOUND: "Attachment not found",
+    },
+  },
+  STALE_CONTENT: {
+    CONTROLLER: {
+      TEMPORARY_FILE_DELETED: "Temporary file deleted successfully",
+    },
+    ROUTE: {
+      FILE_PATHS_REQUIRED:
+        "File paths are required and must be an array of non empties strings",
+      NOT_FOUND:
+        "some of the pathfiles provided were not found, please check {paths:string}",
+    },
+    ERROR: {
+      FAILED_DELETE_ALL_FILES: "Failed to delete all files",
     },
   },
 };

@@ -11,6 +11,9 @@ import {
 } from "./anonymous-case.utils.js";
 import mongoose from "mongoose";
 import { AnonymousKey } from "../anonymous-key/anonymous-key.model.js";
+import { Attachment } from "../attachment/attachment.model.js";
+import { StaleContent } from "../stale-content/stale-content.model.js";
+import { AnonymousCaseFailedToUploadImagesError } from "./anonymous-case.errors.js";
 
 export const getAllAnonymousCases = async (req, res) => {
   const LL = getTranslationFunctions(req.locale);
@@ -54,8 +57,16 @@ export const createAnonymousCase = async (req, res) => {
   try {
     logger.info("Starting to create anonymous case");
 
-    const { description, latitude, longitude, address, city, country, key } =
-      req.body;
+    const {
+      description,
+      latitude,
+      longitude,
+      address,
+      city,
+      country,
+      key,
+      filepaths,
+    } = req.body;
 
     let anonymousCaseId;
     if (key) {
@@ -67,6 +78,28 @@ export const createAnonymousCase = async (req, res) => {
       });
       await anonymousCaseKey.save();
       anonymousCaseId = anonymousCaseKey._id;
+    }
+
+    let dbAttachment;
+
+    if (filepaths) {
+      const deleted = await StaleContent.deleteMany({
+        filepath: { $in: filepaths },
+      });
+
+      if (deleted.deletedCount !== filepaths.length) {
+        throw new AnonymousCaseFailedToUploadImagesError(
+          LL.ANONYMOUS_CASE.ERROR.FAILED_UPLOAD_IMAGES(),
+        );
+      }
+
+      dbAttachment = new Attachment(
+        cleanObject({
+          filepaths,
+        }),
+      );
+
+      await dbAttachment.save();
     }
 
     const anonymousCase = new AnonymousCase(
@@ -83,6 +116,7 @@ export const createAnonymousCase = async (req, res) => {
             coordinates: [longitude, latitude],
           },
         },
+        ...(dbAttachment && { attachment: dbAttachment._id }),
       }),
     );
 
@@ -120,9 +154,8 @@ export const deleteAnonymousCaseById = async (req, res) => {
 
     const { id } = req.params;
 
-    const anonymousCase = await AnonymousCase.findOne({
-      _id: id,
-      tp_status: true,
+    const anonymousCase = await AnonymousCase.findByIdAndUpdate(id, {
+      tp_status: false,
     });
 
     res.status(StatusCodes.OK).json({

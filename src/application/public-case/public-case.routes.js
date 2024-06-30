@@ -16,6 +16,10 @@ import { validateChecks } from "../../middleware/validate-checks.js";
 import { custom } from "../../middleware/custom.js";
 import { PublicCase } from "./public-case.model.js";
 import { PublicCaseNotFoundError } from "./public-case.errors.js";
+import {
+  filepathsValidation,
+  validateOptionalsFilepathsAreInStaleContent,
+} from "../../middleware/filepaths.js";
 
 const router = Router();
 
@@ -26,7 +30,13 @@ router
     getFeedPublicCases,
   )
   .post(
-    [...publicCaseValidation, ...locationValidation, validateChecks],
+    [
+      ...publicCaseValidation,
+      ...locationValidation,
+      ...filepathsValidation,
+      validateChecks,
+      validateOptionalsFilepathsAreInStaleContent,
+    ],
     createPublicCase,
   );
 

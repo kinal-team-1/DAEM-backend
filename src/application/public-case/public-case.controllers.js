@@ -8,6 +8,10 @@ import {
   findPublicCases,
   findPublicCasesByCoordinates,
 } from "./public-case.utils.js";
+import { Attachment } from "../attachment/attachment.model.js";
+import mongoose from "mongoose";
+import { StaleContent } from "../stale-content/stale-content.model.js";
+import { PublicCaseFailedToUploadImagesError } from "./public-case.errors.js";
 
 export const getFeedPublicCases = async (req, res) => {
   const LL = getTranslationFunctions(req.locale);
@@ -43,6 +47,8 @@ export const getFeedPublicCases = async (req, res) => {
 
 export const createPublicCase = async (req, res) => {
   const LL = getTranslationFunctions(req.locale);
+  const session = await mongoose.startSession();
+  await session.startTransaction();
   try {
     logger.info("Creating public case");
 
@@ -55,7 +61,30 @@ export const createPublicCase = async (req, res) => {
       city,
       country,
       submitter,
+      filepaths,
     } = req.body;
+
+    let dbAttachment;
+
+    if (filepaths) {
+      const deleted = await StaleContent.deleteMany({
+        filepath: { $in: filepaths },
+      });
+
+      if (deleted.deletedCount !== filepaths.length) {
+        throw new PublicCaseFailedToUploadImagesError(
+          LL.PUBLIC_CASE.ERROR.FAILED_UPLOAD_IMAGES(),
+        );
+      }
+
+      dbAttachment = new Attachment(
+        cleanObject({
+          filepaths,
+        }),
+      );
+
+      await dbAttachment.save();
+    }
 
     const publicCase = new PublicCase(
       cleanObject({
@@ -72,20 +101,27 @@ export const createPublicCase = async (req, res) => {
             coordinates: [longitude, latitude],
           },
         },
+        ...(dbAttachment && { attachment: dbAttachment._id }),
       }),
     );
 
     await publicCase.save();
+    await publicCase.populate("attachment");
+    await session.commitTransaction();
 
     res.status(StatusCodes.CREATED).json({
       data: publicCase,
       message: LL.PUBLIC_CASE.CONTROLLER.CREATED(),
     });
+
     logger.info("Successfully created public case");
   } catch (error) {
     logger.error("Failed to create public case. error of type: " + error.name);
+    await session.abortTransaction();
 
     handleResponse(res, error, LL);
+  } finally {
+    session.endSession();
   }
 };
 

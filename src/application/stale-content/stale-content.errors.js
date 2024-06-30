@@ -1,17 +1,17 @@
 import { StatusCodes } from "http-status-codes";
 
-export class PublicCaseNotFoundError extends Error {
+export class StaleContentNotFoundError extends Error {
   constructor(message) {
     super(message);
     this.statusCode = StatusCodes.NOT_FOUND;
-    this.name = "PublicCaseNotFoundError";
+    this.name = "StaleContentNotFoundError";
   }
 }
 
-export class PublicCaseFailedToUploadImagesError extends Error {
+export class StaleContentFailedToRemoveError extends Error {
   constructor(message) {
     super(message);
     this.statusCode = StatusCodes.INTERNAL_SERVER_ERROR;
-    this.name = "PublicCaseFailedToUploadImagesError";
+    this.name = "StaleContentFailedToRemoveError";
   }
 }

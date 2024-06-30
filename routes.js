@@ -9,7 +9,8 @@ import { logger } from "./src/utils/logger.js";
 import publicCasesRouter from "./src/application/public-case/public-case.routes.js";
 import authRouter from "./src/application/auth/auth.routes.js";
 import userRouter from "./src/application/user/user.routes.js";
-import anonymousCaseRoutes from "./src/application/anonymous-cases/anonymous-case.routes.js";
+import anonymousCaseRouter from "./src/application/anonymous-cases/anonymous-case.routes.js";
+import attachmentRouter from "./src/application/attachment/attachment.routes.js";
 
 export const app = express();
 
@@ -35,12 +36,13 @@ app.get("/", (req, res) => {
   res.status(StatusCodes.OK).json({ message: LL.HI(), data: undefined });
 });
 
+app.use(printLanguage);
+
 app.use("/api/public-case", publicCasesRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
-app.use("/api/anonymous-case", anonymousCaseRoutes);
-
-app.use(printLanguage);
+app.use("/api/anonymous-case", anonymousCaseRouter);
+app.use("/api/attachment", attachmentRouter);
 
 app.use("*", (req, res) => {
   logger.request_info("Route not found " + req.path);

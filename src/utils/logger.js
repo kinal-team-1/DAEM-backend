@@ -25,8 +25,8 @@ const isDebug = process.env.DEBUG === "true";
 const transport = {
   target: "pino-pretty",
   options: {
-    customLevels: "request_info:35", // split by ','
-    customColors: "request_info:magenta", // split by ','
+    customLevels: "request_info:35,task_schedule:33", // split by ','
+    customColors: "request_info:magenta,task_schedule:yellow", // split by ','
     useOnlyCustomProps: false,
   },
 };
@@ -35,6 +35,7 @@ const defaultLogger = pino({
   customLevels: {
     // color: 'indigo',
     request_info: 35,
+    task_schedule: 33,
   },
 
   // if isTest then only show errors
