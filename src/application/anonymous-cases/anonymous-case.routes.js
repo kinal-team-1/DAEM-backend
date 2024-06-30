@@ -15,6 +15,10 @@ import {
 import { custom } from "../../middleware/custom.js";
 import { AnonymousCase } from "./anonymous-case.model.js";
 import { AnonymousCaseNotFoundError } from "./anonymous-case.errors.js";
+import {
+  filepathsValidation,
+  validateOptionalsFilepathsAreInStaleContent,
+} from "../../middleware/filepaths.js";
 
 const router = Router();
 
@@ -32,21 +36,10 @@ router
       )
         .isString()
         .isLength({ min: 20 }),
-      body(
-        "attachment",
-        message((LL) => LL.PUBLIC_CASE.ROUTE.OPTIONAL_ATTACHMENT()),
-      )
-        .optional()
-        .isArray({ min: 1 }),
-      body(
-        "attachment.*",
-        message((LL) => LL.PUBLIC_CASE.ROUTE.OPTIONAL_ATTACHMENT()),
-      )
-        .optional()
-        .isString()
-        .notEmpty(),
+      ...filepathsValidation,
       ...locationValidation,
       validateChecks,
+      validateOptionalsFilepathsAreInStaleContent,
     ],
     createAnonymousCase,
   );

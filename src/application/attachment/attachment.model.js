@@ -13,7 +13,7 @@ const AttachmentSchema = new Schema({
   tp_status: {
     type: Boolean,
     required: true,
-    default: false,
+    default: true,
   },
 });
 

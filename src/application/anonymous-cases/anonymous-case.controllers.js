@@ -65,7 +65,7 @@ export const createAnonymousCase = async (req, res) => {
       city,
       country,
       key,
-      attachment,
+      filepaths,
     } = req.body;
 
     let anonymousCaseId;
@@ -82,12 +82,12 @@ export const createAnonymousCase = async (req, res) => {
 
     let dbAttachment;
 
-    if (attachment) {
+    if (filepaths) {
       const deleted = await StaleContent.deleteMany({
-        filePath: { $in: attachment },
+        filepath: { $in: filepaths },
       });
 
-      if (deleted.deletedCount !== attachment.length) {
+      if (deleted.deletedCount !== filepaths.length) {
         throw new AnonymousCaseFailedToUploadImagesError(
           LL.ANONYMOUS_CASE.ERROR.FAILED_UPLOAD_IMAGES(),
         );
@@ -95,7 +95,7 @@ export const createAnonymousCase = async (req, res) => {
 
       dbAttachment = new Attachment(
         cleanObject({
-          filepaths: attachment,
+          filepaths,
         }),
       );
 

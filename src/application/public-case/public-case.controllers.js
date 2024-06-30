@@ -61,17 +61,17 @@ export const createPublicCase = async (req, res) => {
       city,
       country,
       submitter,
-      attachment,
+      filepaths,
     } = req.body;
 
     let dbAttachment;
 
-    if (attachment) {
+    if (filepaths) {
       const deleted = await StaleContent.deleteMany({
-        filePath: { $in: attachment },
+        filepath: { $in: filepaths },
       });
 
-      if (deleted.deletedCount !== attachment.length) {
+      if (deleted.deletedCount !== filepaths.length) {
         throw new PublicCaseFailedToUploadImagesError(
           LL.PUBLIC_CASE.ERROR.FAILED_UPLOAD_IMAGES(),
         );
@@ -79,7 +79,7 @@ export const createPublicCase = async (req, res) => {
 
       dbAttachment = new Attachment(
         cleanObject({
-          filepaths: attachment,
+          filepaths,
         }),
       );
 

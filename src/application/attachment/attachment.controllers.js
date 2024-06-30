@@ -12,8 +12,6 @@ import { StaleContent } from "../stale-content/stale-content.model.js";
 import mongoose from "mongoose";
 import { StaleContentFailedToRemoveError } from "../stale-content/stale-content.errors.js";
 
-const BUCKET_NAME = "DAEM";
-
 // STALE CONTENT
 export const createUploadSignedUrl = async (req, res) => {
   const LL = getTranslationFunctions(req.locale);
@@ -22,14 +20,13 @@ export const createUploadSignedUrl = async (req, res) => {
   try {
     logger.info("Starting create upload signed url");
 
-    const { filePath } = req.body;
+    const { filepath } = req.body;
 
     // save the file path to the stale content collection
-    new StaleContent({ filePath }).save();
+    await new StaleContent({ filepath }).save();
 
-    const { data, error } = await supabaseClient.storage
-      .from(BUCKET_NAME)
-      .createSignedUploadUrl(filePath); // URL expires in 60 seconds
+    const { data, error } =
+      await supabaseClient.createSignedUploadUrl(filepath); // URL expires in 2 hours
 
     if (error) {
       logger.fatal(error.stack);
@@ -60,7 +57,7 @@ export const createUploadSignedUrl = async (req, res) => {
 };
 
 // ATTACHMENT
-export const createGetSignedUrl = async (req, res) => {
+export const createGetSignedUrlsAttachments = async (req, res) => {
   const LL = getTranslationFunctions(req.locale);
   try {
     logger.info("Starting create get signed url");
@@ -69,9 +66,10 @@ export const createGetSignedUrl = async (req, res) => {
 
     const attachment = await Attachment.findOne({ _id: id, tp_status: true });
 
-    const { data, error } = await supabaseClient.storage
-      .from(BUCKET_NAME)
-      .createSignedUrls(attachment.filepaths, 60);
+    const { data, error } = await supabaseClient.createSignedUrls(
+      attachment.filepaths,
+      60,
+    );
 
     if (error) {
       throw new AttachmentCreateGetSignedUrlError(
@@ -100,21 +98,19 @@ export const deleteTemporaryFiles = async (req, res) => {
   try {
     logger.info("Starting delete temporary file");
 
-    const { filePaths } = req.body;
+    const { filepaths } = req.body;
 
     const staleList = await StaleContent.deleteMany({
-      filePath: { $in: filePaths },
+      filepath: { $in: filepaths },
     });
 
-    if (staleList.deletedCount !== filePaths.length) {
+    if (staleList.deletedCount !== filepaths.length) {
       throw new StaleContentFailedToRemoveError(
         LL.STALE_CONTENT.ERROR.FAILED_DELETE_ALL_FILES(),
       );
     }
 
-    const { error } = await supabaseClient.storage
-      .from(BUCKET_NAME)
-      .remove(filePaths);
+    const { error } = await supabaseClient.remove(filepaths);
 
     if (error) {
       logger.fatal(error.stack);

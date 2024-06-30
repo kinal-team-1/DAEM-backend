@@ -4,7 +4,7 @@ export class StaleContentNotFoundError extends Error {
   constructor(message) {
     super(message);
     this.statusCode = StatusCodes.NOT_FOUND;
-    this.name = "NoStaleContentToDeleteError";
+    this.name = "StaleContentNotFoundError";
   }
 }
 
