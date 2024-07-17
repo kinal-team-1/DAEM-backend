@@ -15,3 +15,11 @@ export class StaleContentFailedToRemoveError extends Error {
     this.name = "StaleContentFailedToRemoveError";
   }
 }
+
+export class StaleContentAlreadyExistsError extends Error {
+  constructor(message) {
+    super(message);
+    this.statusCode = StatusCodes.CONFLICT;
+    this.name = "StaleContentAlreadyExistsError";
+  }
+}

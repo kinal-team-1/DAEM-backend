@@ -35,12 +35,14 @@ export const createUploadSignedUrl = async (req, res) => {
       );
     }
 
-    const { signedUrl } = data;
+    const { signedUrl, token } = data;
 
+    console.log({ signedUrl, token });
     await session.commitTransaction();
     res.status(StatusCodes.OK).json({
       data: signedUrl,
       message: LL.ATTACHMENT.CONTROLLER.SIGNED_URL_CREATED(),
+      token,
     });
 
     logger.info("Successfully created upload signed url");

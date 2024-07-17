@@ -143,6 +143,8 @@ const en = {
       CREATE_UPLOAD_SIGNED_URL: "Error creating upload signed URL",
       CREATE_GET_SIGNED_URL: "Error creating get signed URL",
       NOT_FOUND: "Attachment not found",
+      FILEPATH_ALREADY_EXISTS:
+        "An attachment with that filepath already exists, try renaming the file",
     },
   },
   STALE_CONTENT: {
@@ -157,6 +159,8 @@ const en = {
     },
     ERROR: {
       FAILED_DELETE_ALL_FILES: "Failed to delete all files",
+      FILEPATH_ALREADY_EXISTS:
+        "An stale content with that filepath already exists, try renaming the file, or retry in a few minutes",
     },
   },
 };

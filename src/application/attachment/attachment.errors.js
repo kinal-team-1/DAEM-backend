@@ -23,3 +23,11 @@ export class AttachmentNotFoundError extends Error {
     this.name = "AttachmentNotFoundError";
   }
 }
+
+export class AttachmentAlreadyExistsError extends Error {
+  constructor(message) {
+    super(message);
+    this.statusCodes = StatusCodes.CONFLICT;
+    this.name = "AttachmentAlreadyExistsError";
+  }
+}
