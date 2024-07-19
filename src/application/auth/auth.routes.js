@@ -2,10 +2,11 @@ import { Router } from "express";
 import { body } from "express-validator";
 import { message } from "../../utils/message.js";
 import { validateChecks } from "../../middleware/validate-checks.js";
-import { login, signup } from "./auth.controllers.js";
+import { login, signup, validateToken } from "./auth.controllers.js";
 import { custom } from "../../middleware/custom.js";
 import { User } from "../user/user.model.js";
 import { UserAlreadyExistsError } from "../user/user.errors.js";
+import { validateJwt } from "../../middleware/validate-jwt.js";
 
 const router = Router();
 
@@ -94,5 +95,7 @@ router.post(
   ],
   signup,
 );
+
+router.get("/token", validateJwt, validateToken);
 
 export default router;
