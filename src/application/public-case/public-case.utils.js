@@ -21,6 +21,21 @@ export const findPublicCasesByCoordinates = async (
         spherical: true,
       },
     },
+    //  populate the attachment
+    {
+      $lookup: {
+        from: "attachments",
+        localField: "attachment",
+        foreignField: "_id",
+        as: "attachment",
+      },
+    },
+    {
+      $unwind: {
+        path: "$attachment",
+        preserveNullAndEmptyArrays: true, // Keeps documents even if no attachment is found
+      },
+    },
     { $skip: (page - 1) * limit },
     ...(limit ? [{ $limit: limit }] : []),
   ]);
@@ -31,5 +46,6 @@ export const findPublicCases = (page, limit) => {
     tp_status: true,
   })
     .skip((page - 1) * limit)
-    .limit(limit);
+    .limit(limit)
+    .populate("attachment");
 };

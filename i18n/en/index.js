@@ -45,6 +45,7 @@ const en = {
       GET_FEED_SUCCESS: "Successfully got feed public cases",
       CREATED: "Successfully created public case",
       DELETED: "Successfully deleted public case",
+      GET_BY_ID: "Successfully got public case by id",
     },
     ROUTE: {
       TITLE_REQUIRED:
