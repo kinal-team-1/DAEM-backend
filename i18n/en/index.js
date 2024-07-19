@@ -75,6 +75,7 @@ const en = {
     },
     ERROR: {
       NOT_FOUND: "Contribution case not found",
+      FAILED_UPLOAD_IMAGES: "Failed to upload images and link images to the case, please try again",
     },
   },
   USER: {

@@ -1,10 +1,13 @@
 import { getTranslationFunctions } from "../../utils/get-translations-locale.js";
 import { handleResponse } from "../../utils/handle-response.js";
 import { logger } from "../../utils/logger.js";
+import { cleanObject } from "../../utils/clean-object.js";
 import { Contribution } from "./contribution-case.model.js";
 import { Attachment } from "../attachment/attachment.model.js";
 import mongoose from "mongoose";
 import { StatusCodes } from "http-status-codes";
+import { StaleContent } from "../stale-content/stale-content.model.js";
+import { ContributionCaseFailedToUploadImagesError } from "./contribution-case.errors.js";
 
 export const getContributions = async (req, res) => {
   const LL = getTranslationFunctions(req.locale);
@@ -47,10 +50,20 @@ export const createContribution = async (req, res) => {
     let dbAttachment;
 
     if (filepaths) {
-      dbAttachment = new Attachment({
-        filepaths,
+      const deleted = await StaleContent.deleteMany({
+        filepath: { $in: filepaths },
       });
+      if (deleted.deletedCount !== filepaths.length) {
+        throw new ContributionCaseFailedToUploadImagesError(
+          LL.CONTRIBUTION_CASE.ERROR.FAILED_UPLOAD_IMAGES(),
+        );
+      }
 
+      dbAttachment = new Attachment(
+        cleanObject({
+          filepaths,
+        }),
+      );
       await dbAttachment.save();
     }
 
@@ -58,7 +71,6 @@ export const createContribution = async (req, res) => {
       user_id,
       case_id,
       content,
-      created_at: Date.now(),
       ...(dbAttachment && { attachment: dbAttachment._id }),
     });
 
@@ -89,7 +101,10 @@ export const deleteContribution = async (req, res) => {
 
     const { id } = req.params;
 
-    const contribution = await Contribution.findByIdAndDelete(id);
+    const contribution = await Contribution.findOneAndUpdate(
+      { _id: id, tp_status: true },
+      { tp_status: false },
+    );
 
     res.status(StatusCodes.OK).json({
       data: contribution,
