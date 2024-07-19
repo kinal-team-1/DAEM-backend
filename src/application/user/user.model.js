@@ -1,10 +1,6 @@
 import { model, Schema } from "mongoose";
 
 const UserSchema = new Schema({
-  username: {
-    type: String,
-    required: true,
-  },
   email: {
     type: String,
     required: true,
@@ -18,6 +14,14 @@ const UserSchema = new Schema({
     required: true,
   },
   lastname: {
+    type: String,
+    required: true,
+  },
+  DPI: {
+    type: String,
+    required: true,
+  },
+  phone_number: {
     type: String,
     required: true,
   },
@@ -40,11 +44,6 @@ const UserSchema = new Schema({
 
 UserSchema.index(
   { email: 1, tp_status: 1 },
-  { unique: true, partialFilterExpression: { tp_status: true } },
-);
-
-UserSchema.index(
-  { username: 1, tp_status: 1 },
   { unique: true, partialFilterExpression: { tp_status: true } },
 );
 

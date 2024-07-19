@@ -107,6 +107,9 @@ const en = {
         "Name is required and must be a string with at least 2 characters",
       LASTNAME_REQUIRED:
         "Lastname is required and must be a string with at least 2 characters",
+      DPI_REQUIRED: "DPI is required and must be a string with 13 characters",
+      PHONE_NUMBER_REQUIRED:
+        "Phone number is required and must be a string with at least 8 characters",
     },
     ERROR: {
       NOT_FOUND: "User not found",
