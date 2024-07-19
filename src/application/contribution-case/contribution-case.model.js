@@ -15,16 +15,22 @@ const ContributionSchema = new Schema({
     type: String,
     required: true,
   },
+  attachment: {
+    type: Schema.Types.ObjectId,
+    ref: "Attachment",
+  },
   created_at: {
     type: Date,
     default: Date.now,
   },
-  attachments: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Attachment",
-    },
-  ],
+  updated_at: {
+    type: Date,
+  },
+  tp_status: {
+    type: Boolean,
+    required: true,
+    default: true,
+  },
 });
 
 export const Contribution = model("Contribution", ContributionSchema);
