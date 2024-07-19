@@ -22,9 +22,7 @@ const ContributionSchema = new Schema({
   created_at: {
     type: Date,
     default: Date.now,
-  },
-  updated_at: {
-    type: Date,
+    required: true,
   },
   tp_status: {
     type: Boolean,

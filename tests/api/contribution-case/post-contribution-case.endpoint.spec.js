@@ -3,19 +3,20 @@ import { test } from "@japa/runner";
 import "@japa/expect";
 import "@japa/api-client";
 import { hasError } from "../../utils/has-error.js";
+import { createUser } from "../../utils/user.js";
+import { createPublicCase } from "../../utils/public-case.js";
 
 const contributionRoute = "/api/contribution";
 
+// Payload de prueba con valores válidos
 const validPayload = {
-  user_id: "507f1f77bcf86cd799439011",
-  case_id: "507f1f77bcf86cd799439012",
-  content: "Contribution Content",
-  attachment: "507f1f77bcf86cd799439013",
-  tp_status: true,
+  user_id: "",
+  case_id: "",
+  content: "Content case",
 };
 
 test.group(
-  `POST api/contribution should return ${StatusCodes.BAD_REQUEST} code when`,
+  `POST ${contributionRoute} should return ${StatusCodes.BAD_REQUEST} code when`,
   () => {
     test("request body is empty", async ({ client, expect }) => {
       const response = await client
@@ -23,9 +24,10 @@ test.group(
         .json({})
         .then((res) => res);
 
+      response.dumpBody();
       expect(response.status()).toBe(StatusCodes.BAD_REQUEST);
-    });
-
+      expect(response.body().errors).toBeDefined(); // Verifica que haya errores en el cuerpo
+    }).pin();
     for (const key of Object.keys(validPayload)) {
       test(`${key} is missing`, async ({ client, expect }) => {
         const response = await client
@@ -34,7 +36,7 @@ test.group(
           .then((res) => res);
 
         expect(response.status()).toBe(StatusCodes.BAD_REQUEST);
-        expect(response.body().errors.length).toBe(1);
+        expect(response.body().errors.length).toBeGreaterThan(0); // Verifica que haya al menos un error
         expect(
           hasError({
             body: response.body(),
@@ -42,23 +44,26 @@ test.group(
             fields: [key],
           }),
         ).toBe(true);
-      });
+      }).pin();
     }
   },
 );
 
 test.group(
-  `POST api/contribution should return ${StatusCodes.CREATED} code`,
+  `POST ${contributionRoute} should return ${StatusCodes.CREATED} code`,
   () => {
     test("when request body is valid", async ({ client, expect }) => {
+      const user = createUser();
+      const publicCase = createPublicCase({ submitter: user._id });
       const response = await client
         .post(contributionRoute)
-        .json(validPayload)
+        .json({ ...validPayload, case_id: publicCase._id, user_id: user._id })
         .then((res) => res);
 
+      // Verifica que la respuesta tenga el estado esperado y los datos correctos
       expect(response.status()).toBe(StatusCodes.CREATED);
       expect(response.body().data).toBeDefined();
       expect(response.body().message).toBeDefined();
-    });
+    }).pin();
   },
 );

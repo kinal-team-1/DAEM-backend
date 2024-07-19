@@ -7,11 +7,6 @@ import {
   getContributions,
 } from "./contribution-case.controller.js";
 import { pagination } from "../../middleware/pagination.js";
-import {
-  locationSearchQueryParams,
-  locationValidation,
-} from "../../middleware/coordinates-validation.js";
-import { publicCaseValidation } from "../../middleware/public-case-validation.js";
 import { validateChecks } from "../../middleware/validate-checks.js";
 import { custom } from "../../middleware/custom.js";
 import { Contribution } from "./contribution-case.model.js";
@@ -25,14 +20,9 @@ const router = Router();
 
 router
   .route("/")
-  .get(
-    [...pagination, ...locationSearchQueryParams, validateChecks],
-    getContributions,
-  )
+  .get([...pagination, validateChecks], getContributions)
   .post(
     [
-      ...publicCaseValidation,
-      ...locationValidation,
       ...filepathsValidation,
       validateChecks,
       validateOptionalsFilepathsAreInStaleContent,

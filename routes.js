@@ -44,7 +44,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/anonymous-case", anonymousCaseRouter);
 app.use("/api/attachment", attachmentRouter);
-app.use("/api/contribution", contributionRouter);
+app.use("/api/contribution-case", contributionRouter);
 
 app.use("*", (req, res) => {
   logger.request_info("Route not found " + req.path);
