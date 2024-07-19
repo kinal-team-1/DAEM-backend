@@ -5,6 +5,7 @@ import {
   createPublicCase,
   deletePublicCase,
   getFeedPublicCases,
+  getPublicCaseById,
 } from "./public-case.controllers.js";
 import { pagination } from "../../middleware/pagination.js";
 import {
@@ -39,7 +40,29 @@ router
     ],
     createPublicCase,
   );
+router.get(
+  ":id",
+  [
+    param(
+      "id",
+      message((LL) => LL.PUBLIC_CASE.ROUTE.PUBLIC_CASE_ID_REQUIRED()),
+    ).isMongoId(),
+    validateChecks,
+    custom(async (req, LL) => {
+      const { id } = req.params;
 
+      const publicCaseFound = await PublicCase.findOne({
+        _id: id,
+        tp_status: true,
+      });
+
+      if (!publicCaseFound) {
+        throw new PublicCaseNotFoundError(LL.PUBLIC_CASE.ERROR.NOT_FOUND());
+      }
+    }),
+  ],
+  getPublicCaseById,
+);
 router.delete(
   "/:id",
   [
