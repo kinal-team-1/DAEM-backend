@@ -11,11 +11,12 @@ import {
 } from "../../utils/user.js";
 
 const validPayload = {
-  username: "XxX_Jhondoe_XxX",
   email: "jhondoe@email.com",
   password: "Pa$$w0rd",
   name: "John",
   lastname: "Doe",
+  DPI: "1234567890123",
+  phone_number: "12345678",
 };
 
 const authSignupRoute = "/api/auth/signup";
@@ -90,7 +91,7 @@ test.group(
       { password: "12345678" },
     ]);
 
-    for (const key of ["name", "lastname", "username"]) {
+    for (const key of ["name", "lastname"]) {
       test(`${key}'s length is less than 3 characters`, async ({
         client,
         expect,
@@ -156,17 +157,6 @@ test.group(
   () => {
     test("email already taken", async ({ client, expect }, user) => {
       await createUser({ ...getRandomUser(), email: user.email });
-
-      const response = await client
-        .post(authSignupRoute)
-        .json(user)
-        .then((res) => res);
-
-      expect(response.status()).toBe(StatusCodes.CONFLICT);
-    }).with(getRandomUsers(3));
-
-    test("username already taken", async ({ client, expect }, user) => {
-      await createUser({ ...getRandomUser(), username: user.username });
 
       const response = await client
         .post(authSignupRoute)

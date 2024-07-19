@@ -12,12 +12,10 @@ export const login = async (req, res) => {
   try {
     logger.info("Login started");
 
-    const { username, email, password } = req.body;
-
-    const isUsernameDefined = username !== undefined;
+    const { email, password } = req.body;
 
     const user = await User.findOne({
-      ...(isUsernameDefined ? { username } : { email }),
+      email,
       tp_status: true,
     });
 
@@ -49,14 +47,15 @@ export const signup = async (req, res) => {
   try {
     logger.info("Signup started");
 
-    const { username, email, password, name, lastname } = req.body;
+    const { email, password, name, lastname, DPI, phone_number } = req.body;
 
     const user = new User({
-      username,
       email,
       password: await bcryptjs.hash(password, 10),
       name,
       lastname,
+      DPI,
+      phone_number,
     });
 
     await user.save();

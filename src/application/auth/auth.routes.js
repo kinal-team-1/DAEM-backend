@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { body, oneOf } from "express-validator";
+import { body } from "express-validator";
 import { message } from "../../utils/message.js";
 import { validateChecks } from "../../middleware/validate-checks.js";
 import { login, signup } from "./auth.controllers.js";
@@ -12,20 +12,10 @@ const router = Router();
 router.post(
   "/login",
   [
-    // either username or email is required
-    body(
-      "username",
-      message((LL) => LL.AUTH.ROUTE.USERNAME_OPTIONAL()),
-    )
-      .optional()
-      .isString()
-      .isLength({ min: 3 }),
     body(
       "email",
-      message((LL) => LL.AUTH.ROUTE.EMAIL_OPTIONAL()),
-    )
-      .optional()
-      .isEmail(),
+      message((LL) => LL.AUTH.ROUTE.EMAIL_REQUIRED()),
+    ).isEmail(),
     body(
       "password",
       message((LL) => LL.AUTH.ROUTE.PASSWORD_REQUIRED()),
@@ -38,18 +28,6 @@ router.post(
         minLowercase: 1,
         minUppercase: 1,
       }),
-    // either username or email is required, but not both
-    oneOf(
-      [
-        [body("username").exists(), body("email").not().exists()],
-        [body("email").exists(), body("username").not().exists()],
-      ],
-      {
-        message: message((LL) =>
-          LL.AUTH.ROUTE.EITHER_USERNAME_OR_EMAIL_REQUIRED(),
-        ),
-      },
-    ),
     validateChecks,
   ],
   login,
@@ -58,13 +36,6 @@ router.post(
 router.post(
   "/signup",
   [
-    body(
-      "username",
-      message((LL) => LL.AUTH.ROUTE.USERNAME_REQUIRED()),
-    )
-      .isString()
-      .isLength({ min: 3 }),
-
     body(
       "email",
       message((LL) => LL.AUTH.ROUTE.EMAIL_REQUIRED()),
@@ -95,25 +66,28 @@ router.post(
     )
       .isString()
       .isLength({ min: 2 }),
+    body(
+      "DPI",
+      message((LL) => LL.AUTH.ROUTE.DPI_REQUIRED()),
+    )
+      .isString()
+      .isLength({ min: 13, max: 13 }),
+    body(
+      "phone_number",
+      message((LL) => LL.AUTH.ROUTE.PHONE_NUMBER_REQUIRED()),
+    )
+      .isString()
+      .isLength({ min: 8 }),
     validateChecks,
     custom(async (req, LL) => {
-      const { username, email } = req.body;
+      const { email } = req.body;
 
-      // check if username is already taken
       const userFound = await User.findOne({
-        $or: [{ username }, { email }],
+        email,
         tp_status: true,
       });
 
-      if (!userFound) return;
-
-      if (userFound.username === username) {
-        throw new UserAlreadyExistsError(
-          LL.USER.ERROR.USERNAME_ALREADY_EXISTS(),
-        );
-      }
-
-      if (userFound.email === email) {
+      if (userFound) {
         throw new UserAlreadyExistsError(LL.USER.ERROR.EMAIL_ALREADY_EXISTS());
       }
     }),
