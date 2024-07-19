@@ -88,6 +88,7 @@ const en = {
       LOGOUT_SUCCESS: "User logged out successfully",
       REGISTER_SUCCESS: "User registered successfully",
       DELETE_USER_SUCCESS: "User deleted successfully",
+      SUCCESS_TOKEN_VALIDATION: "Token is valid",
     },
     ROUTE: {
       USERNAME_REQUIRED:
