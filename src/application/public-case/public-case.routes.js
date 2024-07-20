@@ -6,6 +6,7 @@ import {
   deletePublicCase,
   getFeedPublicCases,
   getPublicCaseById,
+  getPublicCaseByUserId,
 } from "./public-case.controllers.js";
 import { pagination } from "../../middleware/pagination.js";
 import {
@@ -21,6 +22,8 @@ import {
   filepathsValidation,
   validateOptionalsFilepathsAreInStaleContent,
 } from "../../middleware/filepaths.js";
+import { User } from "../user/user.model.js";
+import { UserNotFoundError } from "../user/user.errors.js";
 
 const router = Router();
 
@@ -63,6 +66,31 @@ router.get(
   ],
   getPublicCaseById,
 );
+
+router.get(
+  "/by-user/:userId",
+  [
+    param(
+      "userId",
+      message((LL) => LL.PUBLIC_CASE.ROUTE.SUBMITTER_REQUIRED()),
+    ).isMongoId(),
+    validateChecks,
+    custom(async (req, LL) => {
+      const { userId } = req.params;
+
+      const userFound = await User.findOne({
+        _id: userId,
+        tp_status: true,
+      });
+
+      if (!userFound) {
+        throw new UserNotFoundError(LL.USER.ERROR.NOT_FOUND());
+      }
+    }),
+  ],
+  getPublicCaseByUserId,
+);
+
 router.delete(
   "/:id",
   [

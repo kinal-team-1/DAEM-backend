@@ -152,6 +152,33 @@ export const getPublicCaseById = async (req, res) => {
   }
 };
 
+export const getPublicCaseByUserId = async (req, res) => {
+  const LL = getTranslationFunctions(req.locale);
+  try {
+    logger.info("Getting public cases by user id");
+
+    const { userId } = req.params;
+
+    const publicCases = await PublicCase.find({
+      submitter: userId,
+      tp_status: true,
+    });
+
+    res.status(StatusCodes.OK).json({
+      data: publicCases,
+      message: LL.PUBLIC_CASE.CONTROLLER.GET_BY_ID(),
+    });
+
+    logger.info("Successfully got public cases by user id");
+  } catch (error) {
+    logger.error(
+      "Failed to get public cases by user id. error of type: " + error.name,
+    );
+
+    handleResponse(res, error, LL);
+  }
+};
+
 export const deletePublicCase = async (req, res) => {
   const LL = getTranslationFunctions(req.locale);
   try {
