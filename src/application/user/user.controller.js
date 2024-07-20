@@ -64,14 +64,13 @@ export const updateUserById = async (req, res) => {
   const LL = getTranslationFunctions(req.locale);
   try {
     logger.info("Updating user by id");
-    const { phone_number, password } = req.body;
+    const { phone_number } = req.body;
 
     const { id } = req.params;
     const user = await User.findOneAndUpdate(
       id,
       {
         phone_number,
-        password,
       },
       { new: true },
     );

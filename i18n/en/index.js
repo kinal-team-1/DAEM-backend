@@ -93,6 +93,8 @@ const en = {
     ROUTE: {
       USER_ID_REQUIRED:
         "The URL must include a valid MongoDB ObjectId representing the user id.",
+      PASSWORD_REQUIRED: "Password is required and must be a string",
+      PHONE_NUMBER_REQUIRED: "Phone number is required and must be a string",
     },
     ERROR: {
       NOT_FOUND: "User not found",

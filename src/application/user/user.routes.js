@@ -6,12 +6,13 @@ import {
   getUserById,
   updateUserById,
 } from "./user.controller.js";
-import { param } from "express-validator";
+import { body, param } from "express-validator";
 import { message } from "../../utils/message.js";
 import { validateChecks } from "../../middleware/validate-checks.js";
 import { custom } from "../../middleware/custom.js";
 import { User } from "./user.model.js";
 import { UserNotFoundError } from "./user.errors.js";
+import { AuthInvalidCredentialsError } from "../auth/auth.errors.js";
 
 const router = Router();
 
@@ -25,9 +26,19 @@ router
         "id",
         message((LL) => LL.USER.ROUTE.USER_ID_REQUIRED()),
       ).isMongoId(),
+      body(
+        "password",
+        message((LL) => LL.USER.ROUTE.PASSWORD_REQUIRED()),
+      ).isString(),
+      body(
+        "phone_number",
+        message((LL) => LL.USER.ROUTE.PHONE_NUMBER_REQUIRED()),
+      ).isString(),
+
       validateChecks,
       custom(async (req, LL) => {
         const { id } = req.params;
+        const { password } = req.body;
 
         const userFound = await User.findOne({
           _id: id,
@@ -36,6 +47,12 @@ router
 
         if (!userFound) {
           throw new UserNotFoundError(LL.USER.ERROR.NOT_FOUND());
+        }
+
+        if (password !== userFound.password) {
+          throw new AuthInvalidCredentialsError(
+            LL.AUTH.ERROR.INVALID_CREDENTIALS(),
+          );
         }
       }),
     ],
