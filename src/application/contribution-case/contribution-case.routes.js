@@ -5,6 +5,7 @@ import {
   createContribution,
   deleteContribution,
   getContributions,
+  getContributionsByUserId,
 } from "./contribution-case.controller.js";
 import { pagination } from "../../middleware/pagination.js";
 import { validateChecks } from "../../middleware/validate-checks.js";
@@ -15,6 +16,8 @@ import {
   filepathsValidation,
   validateOptionalsFilepathsAreInStaleContent,
 } from "../../middleware/filepaths.js";
+import { User } from "../user/user.model.js";
+import { UserNotFoundError } from "../user/user.errors.js";
 
 const router = Router();
 
@@ -32,6 +35,30 @@ router
     ],
     createContribution,
   );
+
+router.get(
+  "/by-user/:userId",
+  [
+    param(
+      "userId",
+      message((LL) => LL.CONTRIBUTION_CASE.ROUTE.USER_ID_REQUIRED()),
+    ).isMongoId(),
+    validateChecks,
+    custom(async (req, LL) => {
+      const { userId } = req.params;
+
+      const userFound = await User.findOne({
+        _id: userId,
+        tp_status: true,
+      });
+
+      if (!userFound) {
+        throw new UserNotFoundError(LL.USER.ERROR.NOT_FOUND());
+      }
+    }),
+  ],
+  getContributionsByUserId,
+);
 
 router.delete(
   "/:id",

@@ -72,11 +72,15 @@ const en = {
       CREATED: "Successfully created contribution case",
     },
     ROUTE: {
-      CONTRIBUTION_CASE_ID_REQUIRED: "The URL must include a valid MongoDB ObjectId representing the contribution id.",
+      CONTRIBUTION_CASE_ID_REQUIRED:
+        "The URL must include a valid MongoDB ObjectId representing the contribution id.",
+      USER_ID_REQUIRED:
+        "The URL must include a valid MongoDB ObjectId representing the user id.",
     },
     ERROR: {
       NOT_FOUND: "Contribution case not found",
-      FAILED_UPLOAD_IMAGES: "Failed to upload images and link images to the case, please try again",
+      FAILED_UPLOAD_IMAGES:
+        "Failed to upload images and link images to the case, please try again",
     },
   },
   USER: {
