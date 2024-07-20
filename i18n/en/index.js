@@ -65,6 +65,20 @@ const en = {
         "Failed to upload images and link images to the case, please try again",
     },
   },
+  CONTRIBUTION_CASE: {
+    CONTROLLER: {
+      GET_CONTRIBUTION_SUCCESS: "Contribution retrieved successfully",
+      DELETED: "Successfully deleted contribution case",
+      CREATED: "Successfully created contribution case",
+    },
+    ROUTE: {
+      CONTRIBUTION_CASE_ID_REQUIRED: "The URL must include a valid MongoDB ObjectId representing the contribution id.",
+    },
+    ERROR: {
+      NOT_FOUND: "Contribution case not found",
+      FAILED_UPLOAD_IMAGES: "Failed to upload images and link images to the case, please try again",
+    },
+  },
   USER: {
     CONTROLLER: {
       GET_ALL_USERS_SUCCESS: "All users retrieved successfully",
