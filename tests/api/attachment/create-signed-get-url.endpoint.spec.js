@@ -56,7 +56,7 @@ test.group(
       const attachmentId = publicCase.attachment._id;
 
       const response = await client
-        .post(`/api/attachment/${attachmentId}`)
+        .get(`/api/attachment/${attachmentId}`)
         .then((res) => res);
 
       expect(response.status()).toBe(StatusCodes.OK);

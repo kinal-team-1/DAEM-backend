@@ -55,7 +55,7 @@ router.post(
   createUploadSignedUrl,
 );
 
-router.post(
+router.get(
   "/:id",
   [
     param(
