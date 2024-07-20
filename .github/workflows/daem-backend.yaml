@@ -60,6 +60,8 @@ jobs:
             echo "PORT=4000" >> .env.test
             echo "MONGO_URL='mongodb://app-user:app-password@localhost:27017/daem-test'" >> .env.test
             echo "JWT_SECRET='6bef1104a2bab0b3a9e9d27875e033da86547968fc3b6ebdbe3f068a2a466e9b'" >> .env.test
+            echo "SUPABASE_URL=https://example.com" >> .env.test
+            echo "SUPABASE_KEY=example-key" >> .env.test
 
       - name: Generate types
         run: npm run typesafe-i18n:once
