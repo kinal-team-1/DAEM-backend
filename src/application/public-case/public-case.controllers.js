@@ -162,7 +162,7 @@ export const getPublicCaseByUserId = async (req, res) => {
     const publicCases = await PublicCase.find({
       submitter: userId,
       tp_status: true,
-    });
+    }).populate("attachment");
 
     res.status(StatusCodes.OK).json({
       data: publicCases,
