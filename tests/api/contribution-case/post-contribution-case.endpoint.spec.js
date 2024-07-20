@@ -27,7 +27,7 @@ test.group(
       response.dumpBody();
       expect(response.status()).toBe(StatusCodes.BAD_REQUEST);
       expect(response.body().errors).toBeDefined(); // Verifica que haya errores en el cuerpo
-    }).pin();
+    });
     for (const key of Object.keys(validPayload)) {
       test(`${key} is missing`, async ({ client, expect }) => {
         const response = await client
@@ -44,7 +44,7 @@ test.group(
             fields: [key],
           }),
         ).toBe(true);
-      }).pin();
+      });
     }
   },
 );
@@ -53,8 +53,8 @@ test.group(
   `POST ${contributionRoute} should return ${StatusCodes.CREATED} code`,
   () => {
     test("when request body is valid", async ({ client, expect }) => {
-      const user = createUser();
-      const publicCase = createPublicCase({ submitter: user._id });
+      const user = await createUser();
+      const publicCase = await createPublicCase();
       const response = await client
         .post(contributionRoute)
         .json({ ...validPayload, case_id: publicCase._id, user_id: user._id })
@@ -64,6 +64,6 @@ test.group(
       expect(response.status()).toBe(StatusCodes.CREATED);
       expect(response.body().data).toBeDefined();
       expect(response.body().message).toBeDefined();
-    }).pin();
+    });
   },
 );

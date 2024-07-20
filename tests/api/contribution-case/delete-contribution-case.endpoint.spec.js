@@ -3,7 +3,12 @@ import "@japa/api-client";
 import { test } from "@japa/runner";
 import { StatusCodes } from "http-status-codes";
 import { hasError } from "../../utils/has-error.js";
-import { createContribution } from "../../utils/contribution-case.js";
+import {
+  createContribution,
+  getRandomContributions,
+} from "../../utils/contribution-case.js";
+import { createUser } from "../../utils/user.js";
+import { createPublicCase } from "../../utils/public-case.js";
 
 const contributionRoutes = "/api/contribution";
 
@@ -46,7 +51,11 @@ test.group(
   `DELETE api/contribution/:id should return ${StatusCodes.OK} code when`,
   () => {
     test("contribution is found", async ({ client, expect }) => {
-      const contribution = await createContribution();
+      const user = await createUser();
+      const publicCase = await createPublicCase();
+      const [body] = getRandomContributions(1, publicCase._id, user._id);
+      delete body.filepaths;
+      const contribution = await createContribution(body);
 
       const response = await client
         .delete(`${contributionRoutes}/${contribution._id}`)

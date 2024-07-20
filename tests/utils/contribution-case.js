@@ -2,6 +2,40 @@ import { HttpClient } from "./http-client.js";
 import { API_URL_TEST } from "./config.js";
 
 const possibleContributions = {
+  user_id: [
+    "507f1f77bcf86cd799439011",
+    "507f1f77bcf86cd799439012",
+    "507f1f77bcf86cd799439013",
+    "507f1f77bcf86cd799439014",
+    "507f1f77bcf86cd799439015",
+    "507f1f77bcf86cd799439016",
+    "507f1f77bcf86cd799439017",
+    "507f1f77bcf86cd799439018",
+    "507f1f77bcf86cd799439019",
+    "507f1f77bcf86cd799439020",
+    "507f1f77bcf86cd799439021",
+    "507f1f77bcf86cd799439022",
+    "507f1f77bcf86cd799439023",
+    "507f1f77bcf86cd799439024",
+    "507f1f77bcf86cd799439025",
+  ],
+  case_id: [
+    "5f9d1b3b5f3b9b001f3b9b00",
+    "5f9d1b3b5f3b9b001f3b9b01",
+    "5f9d1b3b5f3b9b001f3b9b02",
+    "5f9d1b3b5f3b9b001f3b9b03",
+    "5f9d1b3b5f3b9b001f3b9b04",
+    "5f9d1b3b5f3b9b001f3b9b05",
+    "5f9d1b3b5f3b9b001f3b9b06",
+    "5f9d1b3b5f3b9b001f3b9b07",
+    "5f9d1b3b5f3b9b001f3b9b08",
+    "5f9d1b3b5f3b9b001f3b9b09",
+    "5f9d1b3b5f3b9b001f3b9b10",
+    "5f9d1b3b5f3b9b001f3b9b11",
+    "5f9d1b3b5f3b9b001f3b9b12",
+    "5f9d1b3b5f3b9b001f3b9b13",
+    "5f9d1b3b5f3b9b001f3b9b14",
+  ],
   content: [
     "Observed child labor in a local factory",
     "Children selling goods on the street without supervision",
@@ -29,20 +63,12 @@ const possibleContributions = {
   ],
 };
 
-const httpClient = new HttpClient(`${API_URL_TEST}/api/contribution-case`, [
+const httpClient = new HttpClient(`${API_URL_TEST}/api/contribution`, [
   "user_id",
   "case_id",
   "content",
   "filepaths",
 ]);
-
-export const createCase = async (payload) => {
-  const { data: caseData } = await httpClient
-    .with(possibleContributions)
-    .post(payload);
-
-  return caseData;
-};
 
 export const createContribution = async (payload) => {
   const { data: contribution } = await httpClient

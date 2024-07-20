@@ -4,10 +4,10 @@ import { StatusCodes } from "http-status-codes";
 import { test } from "@japa/runner";
 import { createUser } from "../../utils/user.js";
 import {
-  createCase,
   createContribution,
   getRandomContributions,
 } from "../../utils/contribution-case.js";
+import { createPublicCase } from "../../utils/public-case.js";
 
 const contributionRoute = "/api/contribution";
 
@@ -17,16 +17,19 @@ test.group(
     test(`no query params are provided`, async ({ client, expect }) => {
       // Crear datos de prueba: usuario y caso
       const user = await createUser();
-      const contribution = await createCase({ user_id: user._id });
+      const publicCase = await createPublicCase();
 
-      // Crear contribuciones asociadas
       const contributions = getRandomContributions(
         10,
-        contribution._id,
+        publicCase._id,
         user._id,
       );
-      await Promise.all(contributions.map({ createContribution }));
-
+      await Promise.all(
+        contributions.map((c) => {
+          delete c.filepaths;
+          return createContribution(c);
+        }),
+      );
       const response = await client.get(contributionRoute).then((res) => res);
 
       expect(response.status()).toBe(StatusCodes.OK);
@@ -37,15 +40,19 @@ test.group(
 
     test(`with limit query param`, async ({ client, expect }) => {
       const user = await createUser();
-      const contributionCase = await createCase({ user_id: user._id });
+      const publicCase = await createPublicCase();
 
       const contributions = getRandomContributions(
         10,
-        contributionCase._id,
+        publicCase._id,
         user._id,
       );
-      await Promise.all(contributions.map({ createContribution }));
-
+      await Promise.all(
+        contributions.map((c) => {
+          delete c.filepaths;
+          return createContribution(c);
+        }),
+      );
       const response = await client
         .get(`${contributionRoute}?limit=5`)
         .then((res) => res);
@@ -58,14 +65,19 @@ test.group(
 
     test(`with page query param`, async ({ client, expect }) => {
       const user = await createUser();
-      const contributionCase = await createCase({ user_id: user._id });
+      const publicCase = await createPublicCase();
 
       const contributions = getRandomContributions(
         20,
-        contributionCase._id,
+        publicCase._id,
         user._id,
       );
-      await Promise.all(contributions.map({ createContribution }));
+      await Promise.all(
+        contributions.map((c) => {
+          delete c.filepaths;
+          return createContribution(c);
+        }),
+      );
 
       const response = await client
         .get(`${contributionRoute}?page=2&limit=10`)

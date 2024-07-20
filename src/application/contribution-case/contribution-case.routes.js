@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { message } from "../../utils/message.js";
-import { param } from "express-validator";
+import { body, param } from "express-validator";
 import {
   createContribution,
   deleteContribution,
@@ -23,6 +23,9 @@ router
   .get([...pagination, validateChecks], getContributions)
   .post(
     [
+      body("user_id", "user id is required").isMongoId(),
+      body("case_id", "case id is required").isMongoId(),
+      body("content", "content required").isString(),
       ...filepathsValidation,
       validateChecks,
       validateOptionalsFilepathsAreInStaleContent,

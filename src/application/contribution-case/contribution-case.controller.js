@@ -13,12 +13,12 @@ export const getContributions = async (req, res) => {
   const LL = getTranslationFunctions(req.locale);
   try {
     logger.info("Getting contributions");
-    const { page = 1, limit = 10 } = req.query;
+    const { page = 1, limit = 0 } = req.query;
 
     const [total, contributions] = await Promise.all([
       Contribution.countDocuments(),
       Contribution.find()
-        .populate("user_id case_id attachments")
+        .populate("user_id case_id attachment")
         .skip((page - 1) * limit)
         .limit(limit),
     ]);
@@ -75,7 +75,7 @@ export const createContribution = async (req, res) => {
     });
 
     await contribution.save();
-    await contribution.populate("user_id case_id attachments");
+    await contribution.populate("user_id case_id attachment");
     await session.commitTransaction();
 
     res.status(StatusCodes.CREATED).json({
