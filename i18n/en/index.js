@@ -88,6 +88,7 @@ const en = {
       GET_ALL_USERS_SUCCESS: "All users retrieved successfully",
       GET_USER_SUCCESS: "User retrieved successfully",
       DELETE_USER_SUCCESS: "User deleted successfully",
+      UPDATE_USER_SUCCESS: "User updated successfully",
     },
     ROUTE: {
       USER_ID_REQUIRED:
