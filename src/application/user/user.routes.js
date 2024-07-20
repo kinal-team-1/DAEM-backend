@@ -13,6 +13,7 @@ import { custom } from "../../middleware/custom.js";
 import { User } from "./user.model.js";
 import { UserNotFoundError } from "./user.errors.js";
 import { AuthInvalidCredentialsError } from "../auth/auth.errors.js";
+import bcryptjs from "bcryptjs";
 
 const router = Router();
 
@@ -49,7 +50,12 @@ router
           throw new UserNotFoundError(LL.USER.ERROR.NOT_FOUND());
         }
 
-        if (password !== userFound.password) {
+        const isSamePassword = await bcryptjs.compare(
+          password,
+          userFound.password,
+        );
+
+        if (!isSamePassword) {
           throw new AuthInvalidCredentialsError(
             LL.AUTH.ERROR.INVALID_CREDENTIALS(),
           );

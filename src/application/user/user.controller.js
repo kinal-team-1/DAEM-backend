@@ -67,7 +67,7 @@ export const updateUserById = async (req, res) => {
     const { phone_number } = req.body;
 
     const { id } = req.params;
-    const user = await User.findOneAndUpdate(
+    const user = await User.findByIdAndUpdate(
       id,
       {
         phone_number,
