@@ -60,6 +60,35 @@ export const getUserById = async (req, res) => {
   }
 };
 
+export const updateUserById = async (req, res) => {
+  const LL = getTranslationFunctions(req.locale);
+  try {
+    logger.info("Updating user by id");
+    const { phone_number, password } = req.body;
+
+    const { id } = req.params;
+    const user = await User.findOneAndUpdate(
+      id,
+      {
+        phone_number,
+        password,
+      },
+      { new: true },
+    );
+
+    res.status(StatusCodes.OK).json({
+      data: user,
+      message: LL.USER.CONTROLLER.UPDATE_USER_SUCCESS(),
+    });
+
+    logger.info("User updated successfully");
+  } catch (error) {
+    logger.error("Failed to update user. Error of type " + error.name);
+
+    handleResponse(res, error, LL);
+  }
+};
+
 export const deleteUserById = async (req, res) => {
   const LL = getTranslationFunctions(req.locale);
   try {
