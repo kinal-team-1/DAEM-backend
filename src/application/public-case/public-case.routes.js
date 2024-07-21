@@ -43,8 +43,9 @@ router
     ],
     createPublicCase,
   );
+
 router.get(
-  ":id",
+  "/:id",
   [
     param(
       "id",
