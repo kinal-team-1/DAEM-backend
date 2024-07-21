@@ -63,6 +63,32 @@ export const getContributionsByUserId = async (req, res) => {
   }
 };
 
+export const getContributionsByPublicCaseId = async (req, res) => {
+  const LL = getTranslationFunctions(req.locale);
+  try {
+    logger.info("Getting contributions by public case id");
+
+    const { publicCaseId } = req.params;
+    const contributions = await Contribution.find({
+      case_id: publicCaseId,
+      tp_status: true,
+    }).populate("user_id attachment");
+
+    res.status(StatusCodes.OK).json({
+      data: contributions,
+      message: LL.CONTRIBUTION_CASE.CONTROLLER.GET_CONTRIBUTION_SUCCESS(),
+    });
+
+    logger.info("Successfully got contributions by public case id");
+  } catch (error) {
+    logger.error(
+      "Failed to get contributions by public case id. Error of type: " +
+        error.name,
+    );
+    handleResponse(res, error, LL);
+  }
+};
+
 export const createContribution = async (req, res) => {
   const LL = getTranslationFunctions(req.locale);
   const session = await mongoose.startSession();

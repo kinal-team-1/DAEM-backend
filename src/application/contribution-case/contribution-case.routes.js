@@ -5,6 +5,7 @@ import {
   createContribution,
   deleteContribution,
   getContributions,
+  getContributionsByPublicCaseId,
   getContributionsByUserId,
 } from "./contribution-case.controller.js";
 import { pagination } from "../../middleware/pagination.js";
@@ -18,6 +19,7 @@ import {
 } from "../../middleware/filepaths.js";
 import { User } from "../user/user.model.js";
 import { UserNotFoundError } from "../user/user.errors.js";
+import { PublicCase } from "../public-case/public-case.model.js";
 
 const router = Router();
 
@@ -35,6 +37,31 @@ router
     ],
     createContribution,
   );
+
+router.get(
+  "/by-public-case/:publicCaseId",
+  [
+    param(
+      "publicCaseId",
+      message((LL) => LL.CONTRIBUTION_CASE.ROUTE.PUBLIC_CASE_ID_REQUIRED()),
+    ).isMongoId(),
+    custom(async (req, LL) => {
+      const { publicCaseId } = req.params;
+
+      const publicCaseFound = await PublicCase.findOne({
+        _id: publicCaseId,
+        tp_status: true,
+      });
+
+      if (!publicCaseFound) {
+        throw new ContributionCaseNotFoundError(
+          LL.PUBLIC_CASE.ERROR.NOT_FOUND(),
+        );
+      }
+    }),
+  ],
+  getContributionsByPublicCaseId,
+);
 
 router.get(
   "/by-user/:userId",

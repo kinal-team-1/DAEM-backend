@@ -76,6 +76,8 @@ const en = {
         "The URL must include a valid MongoDB ObjectId representing the contribution id.",
       USER_ID_REQUIRED:
         "The URL must include a valid MongoDB ObjectId representing the user id.",
+      PUBLIC_CASE_ID_REQUIRED:
+        "The URL must include a valid MongoDB ObjectId representing the public case id.",
     },
     ERROR: {
       NOT_FOUND: "Contribution case not found",
