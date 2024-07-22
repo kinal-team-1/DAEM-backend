@@ -33,6 +33,7 @@ export const getFeedPublicCases = async (req, res) => {
       total,
       page,
       limit,
+      ...(hasCoordinates && { total_location: feedPublicCases }),
     });
 
     logger.info("Successfully got feed public cases");
@@ -162,7 +163,7 @@ export const getPublicCaseByUserId = async (req, res) => {
     const publicCases = await PublicCase.find({
       submitter: userId,
       tp_status: true,
-    }).populate("attachment");
+    }).populate("attachment submitter");
 
     res.status(StatusCodes.OK).json({
       data: publicCases,

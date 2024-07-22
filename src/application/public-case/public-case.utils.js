@@ -36,6 +36,21 @@ export const findPublicCasesByCoordinates = async (
         preserveNullAndEmptyArrays: true, // Keeps documents even if no attachment is found
       },
     },
+    // populate the submitter
+    {
+      $lookup: {
+        from: "users",
+        localField: "submitter",
+        foreignField: "_id",
+        as: "submitter",
+      },
+    },
+    {
+      $unwind: {
+        path: "$submitter",
+        preserveNullAndEmptyArrays: true, // Keeps documents even if no submitter is found
+      },
+    },
     { $skip: (page - 1) * limit },
     ...(limit ? [{ $limit: limit }] : []),
   ]);
