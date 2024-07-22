@@ -58,6 +58,7 @@ export const createAnonymousCase = async (req, res) => {
     logger.info("Starting to create anonymous case");
 
     const {
+      title,
       description,
       latitude,
       longitude,
@@ -104,6 +105,7 @@ export const createAnonymousCase = async (req, res) => {
 
     const anonymousCase = new AnonymousCase(
       cleanObject({
+        title,
         description,
         key: anonymousCaseId,
         location: {

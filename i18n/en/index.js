@@ -151,6 +151,10 @@ const en = {
         "Description is required and must be a string with a minimum length of 20 characters",
       ANONYMOUS_CASE_ID_REQUIRED:
         "The URL must include a valid MongoDB ObjectId representing the anonymous case id.",
+      OPTIONAL_KEY:
+        "If provided, key must be a string with a minimum length of 21",
+      TITLE_REQUIRED:
+        "Title is required and must be a string with a minimum length of 3 characters",
     },
     ERROR: {
       NOT_FOUND: "Anonymous case not found",

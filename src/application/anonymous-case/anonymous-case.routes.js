@@ -36,6 +36,19 @@ router
       )
         .isString()
         .isLength({ min: 20 }),
+      body(
+        "key",
+        message((LL) => LL.ANONYMOUS_CASE.ROUTE.OPTIONAL_KEY()),
+      )
+        .optional()
+        .isString()
+        .isLength({ min: 21 }),
+      body(
+        "title",
+        message((LL) => LL.ANONYMOUS_CASE.ROUTE.TITLE_REQUIRED()),
+      )
+        .isString()
+        .isLength({ min: 3 }),
       ...filepathsValidation,
       ...locationValidation,
       validateChecks,

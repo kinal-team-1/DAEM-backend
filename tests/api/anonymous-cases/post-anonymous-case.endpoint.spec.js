@@ -8,6 +8,7 @@ import { hasError } from "../../utils/has-error.js";
 export const anonymousCaseRoute = "/api/anonymous-case";
 
 const validPayload = {
+  title: "this is a title",
   description: "This is a test description",
   latitude: 14.656_96,
   longitude: -90.566_51,
