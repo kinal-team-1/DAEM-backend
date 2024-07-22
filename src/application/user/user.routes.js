@@ -46,6 +46,12 @@ router
           tp_status: true,
         });
 
+        if (userFound._id !== req.loggedUser._id) {
+          throw new AuthInvalidCredentialsError(
+            LL.AUTH.ERROR.INVALID_CREDENTIALS(),
+          );
+        }
+
         if (!userFound) {
           throw new UserNotFoundError(LL.USER.ERROR.NOT_FOUND());
         }
@@ -96,4 +102,36 @@ router
     ],
     getUserById,
   );
+
+router.put("/as-admin/:id", [
+  param(
+    "id",
+    message((LL) => LL.USER.ROUTE.USER_ID_REQUIRED()),
+  ).isMongoId(),
+  body(
+    "password",
+    message((LL) => LL.USER.ROUTE.PASSWORD_REQUIRED()),
+  ).isString(),
+  body(
+    "phone_number",
+    message((LL) => LL.USER.ROUTE.PHONE_NUMBER_REQUIRED()),
+  ).isString(),
+
+  validateChecks,
+  custom(async (req, LL) => {
+    const { userLogged } = req;
+    const { password } = req.body;
+
+    const isSamePassword = await bcryptjs.compare(
+      password,
+      userLogged.password,
+    );
+
+    if (!isSamePassword) {
+      throw new AuthInvalidCredentialsError(
+        LL.AUTH.ERROR.INVALID_CREDENTIALS(),
+      );
+    }
+  }),
+]);
 export default router;
