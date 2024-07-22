@@ -29,6 +29,12 @@ const UserSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  role: {
+    type: String,
+    required: true,
+    enum: ["admin", "user"],
+    default: "user",
+  },
   tp_status: {
     type: Boolean,
     default: true,
