@@ -62,5 +62,5 @@ export const findPublicCases = (page, limit) => {
   })
     .skip((page - 1) * limit)
     .limit(limit)
-    .populate("attachment");
+    .populate("attachment submitter");
 };
