@@ -179,7 +179,7 @@ const es = {
       CREATE_GET_SIGNED_URL: "Error al crear URL firmada de obtención",
       NOT_FOUND: "Archivo adjunto no encontrado",
       FILEPATH_ALREADY_EXISTS:
-        "Un archivo adjunto con esa ruta de archivo ya existe, intente renombrar el archivo",
+        "Un archivo adjunto nombrado {filepath} ya existe, intente renombrar el archivo",
     },
   },
   STALE_CONTENT: {

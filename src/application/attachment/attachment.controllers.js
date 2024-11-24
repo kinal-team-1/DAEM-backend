@@ -74,6 +74,7 @@ export const createGetSignedUrlsAttachments = async (req, res) => {
     );
 
     if (error) {
+      console.log(error);
       throw new AttachmentCreateGetSignedUrlError(
         LL.ATTACHMENT.ERROR.CREATE_GET_SIGNED_URL(),
       );

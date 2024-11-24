@@ -175,8 +175,7 @@ const en = {
       CREATE_UPLOAD_SIGNED_URL: "Error creating upload signed URL",
       CREATE_GET_SIGNED_URL: "Error creating get signed URL",
       NOT_FOUND: "Attachment not found",
-      FILEPATH_ALREADY_EXISTS:
-        "An attachment with that filepath already exists, try renaming the file",
+      FILEPATH_ALREADY_EXISTS: `An attachment named {filepath:string} already exists, try renaming the file`,
     },
   },
   STALE_CONTENT: {
