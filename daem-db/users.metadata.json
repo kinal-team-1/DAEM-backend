@@ -1,0 +1,1 @@
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"},{"v":{"$numberInt":"2"},"key":{"email":{"$numberInt":"1"},"tp_status":{"$numberInt":"1"}},"name":"email_1_tp_status_1","background":true,"unique":true,"partialFilterExpression":{"tp_status":true}}],"uuid":"d9dfa7a6af7346c6a6e33c5731325834","collectionName":"users","type":"collection"}

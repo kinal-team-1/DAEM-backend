@@ -36,23 +36,6 @@ const possibleUsers = {
     "Wilson",
     "Anderson",
   ],
-  username: [
-    "JohnS2023",
-    "JaneJ_1995",
-    "AliceW_88",
-    "BobBrown22",
-    "CharlieG_99",
-    "EmmaM2024",
-    "DavidD_1990",
-    "OliviaR_77",
-    "MichaelM33",
-    "SophiaL_11",
-    "WilliamH2021",
-    "AvaA_2000",
-    "JamesG_44",
-    "IsabellaW55",
-    "AlexA_66",
-  ],
   email: [
     "john.smith@email.com",
     "jane.johnson@email.com",
@@ -87,13 +70,48 @@ const possibleUsers = {
     "SuperStr0ngP@13",
     "MegaSecureP@14",
   ],
+  DPI: [
+    "1234567890123",
+    "1234567890124",
+    "1234567890125",
+    "1234567890126",
+    "1234567890127",
+    "1234567890128",
+    "1234567890129",
+    "1234567890130",
+    "1234567890131",
+    "1234567890132",
+    "1234567890133",
+    "1234567890134",
+    "1234567890135",
+    "1234567890136",
+    "1234567890137",
+  ],
+  phone_number: [
+    "12345678",
+    "12345679",
+    "12345680",
+    "12345681",
+    "12345682",
+    "12345683",
+    "12345684",
+    "12345685",
+    "12345686",
+    "12345687",
+    "12345688",
+    "12345689",
+    "12345690",
+    "12345691",
+    "12345692",
+  ],
 };
 const httpClient = new HttpClient(`${API_URL_TEST}/api/auth/signup`, [
   "name",
   "lastname",
-  "username",
   "email",
   "password",
+  "DPI",
+  "phone_number",
 ]);
 export const createUser = async (userBody) => {
   const { data: user } = await httpClient.with(possibleUsers).post(userBody);
@@ -113,8 +131,5 @@ export const getRandomUser = () => {
 };
 
 export const getRandomUsers = (amount) => {
-  return httpClient.getRandomBodies(amount, possibleUsers, [
-    "username",
-    "email",
-  ]);
+  return httpClient.getRandomBodies(amount, possibleUsers, ["email"]);
 };

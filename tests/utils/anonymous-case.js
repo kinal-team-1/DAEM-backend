@@ -2,6 +2,23 @@ import { HttpClient } from "./http-client.js";
 import { API_URL_TEST } from "./config.js";
 
 const possibleCases = {
+  title: [
+    "Child labor observed in textile factory",
+    "Children selling trinkets late at night",
+    "Suspicious activity at bus station",
+    "Children begging near mall entrances",
+    "Underage individuals working at construction site",
+    "Minors entering and leaving suspected brothel",
+    "Child performers working past midnight",
+    "Teenagers distributing illegal substances",
+    "Children working with hazardous chemicals",
+    "Child never leaving house, sounds of distress",
+    "Planned marriage involving underage individual",
+    "Children coerced into participating in political rallies",
+    "Children performing dangerous acrobatic acts",
+    "Online group exploiting minors",
+    "Restaurants employing children",
+  ],
   description: [
     "Multiple children observed working long hours in a textile factory, appearing to be under legal working age.",
     "Group of young children selling trinkets to passersby late at night, no adult supervision visible.",
@@ -98,6 +115,7 @@ const possibleCases = {
 };
 
 const httpClient = new HttpClient(`${API_URL_TEST}/api/anonymous-case`, [
+  "title",
   "description",
   "latitude",
   "longitude",

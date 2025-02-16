@@ -33,6 +33,7 @@ export const getFeedPublicCases = async (req, res) => {
       total,
       page,
       limit,
+      ...(hasCoordinates && { total_location: feedPublicCases }),
     });
 
     logger.info("Successfully got feed public cases");
@@ -122,6 +123,60 @@ export const createPublicCase = async (req, res) => {
     handleResponse(res, error, LL);
   } finally {
     session.endSession();
+  }
+};
+
+export const getPublicCaseById = async (req, res) => {
+  const LL = getTranslationFunctions(req.locale);
+  try {
+    logger.info("Getting public case by id");
+
+    const { id } = req.params;
+
+    const publicCase = await PublicCase.findOne({
+      _id: id,
+      tp_status: true,
+    }).populate("attachment submitter");
+
+    res.status(StatusCodes.OK).json({
+      data: publicCase,
+      message: LL.PUBLIC_CASE.CONTROLLER.GET_BY_ID(),
+    });
+
+    logger.info("Successfully got public case by id");
+  } catch (error) {
+    logger.error(
+      "Failed to get public case by id. error of type: " + error.name,
+    );
+
+    handleResponse(res, error, LL);
+  }
+};
+
+export const getPublicCaseByUserId = async (req, res) => {
+  const LL = getTranslationFunctions(req.locale);
+  try {
+    logger.info("Getting public cases by user id");
+
+    const { userId } = req.params;
+
+    const publicCases = await PublicCase.find({
+      submitter: userId,
+      tp_status: true,
+    }).populate("attachment submitter");
+
+    res.status(StatusCodes.OK).json({
+      data: publicCases,
+      message: LL.PUBLIC_CASE.CONTROLLER.GET_BY_ID(),
+    });
+
+    logger.info("Successfully got public cases by user id");
+  } catch (error) {
+    logger.error(
+      "Failed to get public cases by user id. error of type: " + error.name,
+    );
+
+    handleResponse(res, error, LL);
   }
 };
 

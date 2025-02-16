@@ -6,18 +6,17 @@ import { UserNotFoundError } from "../user/user.errors.js";
 import bcryptjs from "bcryptjs";
 import { AuthInvalidCredentialsError } from "./auth.errors.js";
 import { StatusCodes } from "http-status-codes";
+import { generateToken } from "../../utils/generate-token.js";
 
 export const login = async (req, res) => {
   const LL = getTranslationFunctions(req.locale);
   try {
     logger.info("Login started");
 
-    const { username, email, password } = req.body;
-
-    const isUsernameDefined = username !== undefined;
+    const { email, password } = req.body;
 
     const user = await User.findOne({
-      ...(isUsernameDefined ? { username } : { email }),
+      email,
       tp_status: true,
     });
 
@@ -31,9 +30,13 @@ export const login = async (req, res) => {
       );
     }
 
+    const { _id } = user.toJSON();
+    const token = await generateToken({ email, _id });
+
     res.status(StatusCodes.OK).json({
       data: user,
       message: LL.AUTH.CONTROLLER.LOGIN_SUCCESS(),
+      token,
     });
 
     logger.info("User logged in successfully");
@@ -49,14 +52,15 @@ export const signup = async (req, res) => {
   try {
     logger.info("Signup started");
 
-    const { username, email, password, name, lastname } = req.body;
+    const { email, password, name, lastname, DPI, phone_number } = req.body;
 
     const user = new User({
-      username,
       email,
       password: await bcryptjs.hash(password, 10),
       name,
       lastname,
+      DPI,
+      phone_number,
     });
 
     await user.save();
@@ -69,6 +73,24 @@ export const signup = async (req, res) => {
     logger.info("User registered successfully");
   } catch (error) {
     logger.error("Failed attempt to register. Error of type " + error.name);
+
+    handleResponse(res, error, LL);
+  }
+};
+
+export const validateToken = async (req, res) => {
+  const LL = getTranslationFunctions(req.locale);
+  try {
+    logger.info("Token validation endpoint start");
+
+    res.status(200).json({
+      message: LL.AUTH.CONTROLLER.SUCCESS_TOKEN_VALIDATION(),
+      data: req.loggedUser,
+    });
+
+    logger.info("Token validation successful");
+  } catch (error) {
+    logger.error("Error validating token and getting virtuals: ", error.name);
 
     handleResponse(res, error, LL);
   }

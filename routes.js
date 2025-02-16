@@ -11,6 +11,7 @@ import authRouter from "./src/application/auth/auth.routes.js";
 import userRouter from "./src/application/user/user.routes.js";
 import anonymousCaseRouter from "./src/application/anonymous-case/anonymous-case.routes.js";
 import attachmentRouter from "./src/application/attachment/attachment.routes.js";
+import contributionRouter from "./src/application/contribution-case/contribution-case.routes.js";
 
 export const app = express();
 
@@ -43,6 +44,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/anonymous-case", anonymousCaseRouter);
 app.use("/api/attachment", attachmentRouter);
+app.use("/api/contribution", contributionRouter);
 
 app.use("*", (req, res) => {
   logger.request_info("Route not found " + req.path);

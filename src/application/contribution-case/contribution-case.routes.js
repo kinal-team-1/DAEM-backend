@@ -1,71 +1,66 @@
 import { Router } from "express";
 import { message } from "../../utils/message.js";
-import { param } from "express-validator";
+import { body, param } from "express-validator";
 import {
-  createPublicCase,
-  deletePublicCase,
-  getFeedPublicCases,
-  getPublicCaseById,
-  getPublicCaseByUserId,
-} from "./public-case.controllers.js";
+  createContribution,
+  deleteContribution,
+  getContributions,
+  getContributionsByPublicCaseId,
+  getContributionsByUserId,
+} from "./contribution-case.controller.js";
 import { pagination } from "../../middleware/pagination.js";
-import {
-  locationSearchQueryParams,
-  locationValidation,
-} from "../../middleware/coordinates-validation.js";
-import { publicCaseValidation } from "../../middleware/public-case-validation.js";
 import { validateChecks } from "../../middleware/validate-checks.js";
 import { custom } from "../../middleware/custom.js";
-import { PublicCase } from "./public-case.model.js";
-import { PublicCaseNotFoundError } from "./public-case.errors.js";
+import { Contribution } from "./contribution-case.model.js";
+import { ContributionCaseNotFoundError } from "./contribution-case.errors.js";
 import {
   filepathsValidation,
   validateOptionalsFilepathsAreInStaleContent,
 } from "../../middleware/filepaths.js";
 import { User } from "../user/user.model.js";
 import { UserNotFoundError } from "../user/user.errors.js";
+import { PublicCase } from "../public-case/public-case.model.js";
 
 const router = Router();
 
 router
   .route("/")
-  .get(
-    [...pagination, ...locationSearchQueryParams, validateChecks],
-    getFeedPublicCases,
-  )
+  .get([...pagination, validateChecks], getContributions)
   .post(
     [
-      ...publicCaseValidation,
-      ...locationValidation,
+      body("user_id", "user id is required").isMongoId(),
+      body("case_id", "case id is required").isMongoId(),
+      body("content", "content required").isString(),
       ...filepathsValidation,
       validateChecks,
       validateOptionalsFilepathsAreInStaleContent,
     ],
-    createPublicCase,
+    createContribution,
   );
 
 router.get(
-  "/:id",
+  "/by-public-case/:publicCaseId",
   [
     param(
-      "id",
-      message((LL) => LL.PUBLIC_CASE.ROUTE.PUBLIC_CASE_ID_REQUIRED()),
+      "publicCaseId",
+      message((LL) => LL.CONTRIBUTION_CASE.ROUTE.PUBLIC_CASE_ID_REQUIRED()),
     ).isMongoId(),
-    validateChecks,
     custom(async (req, LL) => {
-      const { id } = req.params;
+      const { publicCaseId } = req.params;
 
       const publicCaseFound = await PublicCase.findOne({
-        _id: id,
+        _id: publicCaseId,
         tp_status: true,
       });
 
       if (!publicCaseFound) {
-        throw new PublicCaseNotFoundError(LL.PUBLIC_CASE.ERROR.NOT_FOUND());
+        throw new ContributionCaseNotFoundError(
+          LL.PUBLIC_CASE.ERROR.NOT_FOUND(),
+        );
       }
     }),
   ],
-  getPublicCaseById,
+  getContributionsByPublicCaseId,
 );
 
 router.get(
@@ -73,7 +68,7 @@ router.get(
   [
     param(
       "userId",
-      message((LL) => LL.PUBLIC_CASE.ROUTE.SUBMITTER_REQUIRED()),
+      message((LL) => LL.CONTRIBUTION_CASE.ROUTE.USER_ID_REQUIRED()),
     ).isMongoId(),
     validateChecks,
     custom(async (req, LL) => {
@@ -89,7 +84,7 @@ router.get(
       }
     }),
   ],
-  getPublicCaseByUserId,
+  getContributionsByUserId,
 );
 
 router.delete(
@@ -97,23 +92,27 @@ router.delete(
   [
     param(
       "id",
-      message((LL) => LL.PUBLIC_CASE.ROUTE.PUBLIC_CASE_ID_REQUIRED()),
+      message((LL) =>
+        LL.CONTRIBUTION_CASE.ROUTE.CONTRIBUTION_CASE_ID_REQUIRED(),
+      ),
     ).isMongoId(),
     validateChecks,
     custom(async (req, LL) => {
       const { id } = req.params;
 
-      const publicCaseFound = await PublicCase.findOne({
+      const contributionCaseFound = await Contribution.findOne({
         _id: id,
         tp_status: true,
       });
 
-      if (!publicCaseFound) {
-        throw new PublicCaseNotFoundError(LL.PUBLIC_CASE.ERROR.NOT_FOUND());
+      if (!contributionCaseFound) {
+        throw new ContributionCaseNotFoundError(
+          LL.CONTRIBUTION_CASE.ERROR.NOT_FOUND(),
+        );
       }
     }),
   ],
-  deletePublicCase,
+  deleteContribution,
 );
 
 export default router;

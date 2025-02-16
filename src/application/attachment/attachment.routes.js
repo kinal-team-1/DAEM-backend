@@ -47,7 +47,9 @@ router.post(
 
       if (attachmentFound) {
         throw new AttachmentAlreadyExistsError(
-          LL.ATTACHMENT.ERROR.FILEPATH_ALREADY_EXISTS(),
+          LL.ATTACHMENT.ERROR.FILEPATH_ALREADY_EXISTS({
+            filepath,
+          }),
         );
       }
     }),
@@ -55,7 +57,7 @@ router.post(
   createUploadSignedUrl,
 );
 
-router.post(
+router.get(
   "/:id",
   [
     param(

@@ -2,42 +2,41 @@ import { StatusCodes } from "http-status-codes";
 import { test } from "@japa/runner";
 import "@japa/expect";
 import "@japa/api-client";
-import { createAnonymousCase } from "../../utils/anonymous-case.js";
 import { hasError } from "../../utils/has-error.js";
+import { createUser } from "../../utils/user.js";
+import { createPublicCase } from "../../utils/public-case.js";
 
-export const anonymousCaseRoute = "/api/anonymous-case";
+const contributionRoute = "/api/contribution";
 
+// Payload de prueba con valores válidos
 const validPayload = {
-  title: "this is a title",
-  description: "This is a test description",
-  latitude: 14.656_96,
-  longitude: -90.566_51,
-  city: "Guatemala City",
-  country: "Guatemala",
-  address: "1st Avenue",
+  user_id: "",
+  case_id: "",
+  content: "Content case",
 };
 
 test.group(
-  `POST /api/anonymous-case Should return ${StatusCodes.BAD_REQUEST} code when`,
+  `POST ${contributionRoute} should return ${StatusCodes.BAD_REQUEST} code when`,
   () => {
     test("request body is empty", async ({ client, expect }) => {
       const response = await client
-        .post(anonymousCaseRoute)
+        .post(contributionRoute)
         .json({})
         .then((res) => res);
 
+      response.dumpBody();
       expect(response.status()).toBe(StatusCodes.BAD_REQUEST);
+      expect(response.body().errors).toBeDefined(); // Verifica que haya errores en el cuerpo
     });
-
     for (const key of Object.keys(validPayload)) {
       test(`${key} is missing`, async ({ client, expect }) => {
         const response = await client
-          .post(anonymousCaseRoute)
+          .post(contributionRoute)
           .json({ ...validPayload, [key]: undefined })
           .then((res) => res);
 
         expect(response.status()).toBe(StatusCodes.BAD_REQUEST);
-        expect(response.body().errors.length).toBe(1);
+        expect(response.body().errors.length).toBeGreaterThan(0); // Verifica que haya al menos un error
         expect(
           hasError({
             body: response.body(),
@@ -51,30 +50,20 @@ test.group(
 );
 
 test.group(
-  `POST /api/anonymous-case Should return ${StatusCodes.CREATED} code when `,
+  `POST ${contributionRoute} should return ${StatusCodes.CREATED} code`,
   () => {
-    test(`a valid payload is provided`, async ({ client, expect }) => {
+    test("when request body is valid", async ({ client, expect }) => {
+      const user = await createUser();
+      const publicCase = await createPublicCase();
       const response = await client
-        .post(anonymousCaseRoute)
-        .json(validPayload)
+        .post(contributionRoute)
+        .json({ ...validPayload, case_id: publicCase._id, user_id: user._id })
         .then((res) => res);
 
+      // Verifica que la respuesta tenga el estado esperado y los datos correctos
       expect(response.status()).toBe(StatusCodes.CREATED);
-      expect(response.body().message).toBeDefined();
       expect(response.body().data).toBeDefined();
-    });
-
-    test(`is follow up case`, async ({ client, expect }) => {
-      const anonymousCase = await createAnonymousCase();
-
-      const response = await client
-        .post(anonymousCaseRoute)
-        .json({ ...validPayload, key: anonymousCase.key })
-        .then((res) => res);
-
-      expect(response.status()).toBe(StatusCodes.CREATED);
       expect(response.body().message).toBeDefined();
-      expect(response.body().data).toBeDefined();
     });
   },
 );
